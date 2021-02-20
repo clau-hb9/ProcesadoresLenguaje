@@ -16,7 +16,7 @@ class Driver {
 		System.out.println("Leyendo entrada de fichero... ");
 		dataStream = new FileInputStream(args[0]);
 	} else {
-	System.out.println("Inserta expresiones a reconocer,”+ “ pulsando <ENTER> entre ellas");
+	System.out.println("Inserta expresiones a reconocer pulsando <ENTER> entre ellas");
 	}
 	
 	// Creamos el objeto scanner
