@@ -29,9 +29,9 @@ Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
 
 /*Numeros*/
-
-/*Hex         = "0x"[0-9|A-F]+*/        /* Macro for Hexadecimal numbers */
-Real 		= [0-9]+ ("." [0-9]+)?
+Integer		= [0-9]+
+Hex         = "0x"[0-9|A-F]+        /* Macro for Hexadecimal numbers */
+Float 		= {Integer},{Integer}?
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -69,8 +69,10 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 /*  "n"          { return new Symbol(SimbolosTerminales.UMINUS); }*/
   "("          { return new Symbol(SimbolosTerminales.LPAREN); }
   ")"          { return new Symbol(SimbolosTerminales.RPAREN); }
-{Real}      	{ return new Symbol(SimbolosTerminales.NUMBER, Double.parseDouble(yytext()));}
-/*{Hex}			{return new Symbol(SimbolosTerminales.NUMBER, Long.decode(yytext()).doubleValue()); }*/
+{Integer}      { return new Symbol(SimbolosTerminales.NUMBER ,Integer.parseInt(yytext())); 	
+{Float}      	{ System.out.println(Double.parseDouble(yytext());
+					return new Symbol(SimbolosTerminales.NUMBER , Double.parseDouble(yytext()));
+{Hex}			{return new Symbol(SimbolosTerminales.NUMBER, Long.decode(yytext()).doubleValue()); }
 
   				
 
