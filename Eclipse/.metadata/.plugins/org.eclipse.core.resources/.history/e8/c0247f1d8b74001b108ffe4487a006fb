@@ -32,7 +32,7 @@ Whitespace = [ \t\f] | {Newline}
 
 /*Hex         = "0x"[0-9|A-F]+*/        /* Macro for Hexadecimal numbers */
 
-Real 		= [0-9]+ ("." [0-9]+)?
+/*Real 		= [0-9]+ ("." [0-9]+)?*/
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -41,7 +41,7 @@ EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 
 /* Datos identificativos */
-DNI					= [0-9]{8} [A-Z]
+DNI					= [A-Z]
 /*FullName 			= {Name} ({Whitespace} {Name})+
 Name				= ([A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*) (\-[A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*)*
 Email				= [A-Za-z0-9\_\-]+ \@ ([A-Za-z0-9\_\-]+ \.)+ [A-Za-z0-9]+
@@ -73,7 +73,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   ")"          { return new Symbol(SimbolosTerminales.RPAREN); }
 {Real}      	{ return new Symbol(SimbolosTerminales.NUMBER, Double.parseDouble(yytext()));}
 /*{Hex}			{return new Symbol(SimbolosTerminales.NUMBER, Long.decode(yytext()).doubleValue()); }*/
-{DNI}			{return new Symbol(SimbolosTerminales.LETRA);}
+{DNI}		{system.out.println("DNI");
 
   				
 
