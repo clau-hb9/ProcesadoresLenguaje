@@ -75,14 +75,15 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 	{Fecha}						{return new Symbol(SimbolosTerminales.FECHA, yytext());}
 	
 	/* Operadores y separadores */
-	";"          			{ return new Symbol(SimbolosTerminales.SEMI, 	yytext());	}
-	"("          			{ return new Symbol(SimbolosTerminales.LPAREN, 	yytext()); 	}												}
-  	")"          			{ return new Symbol(SimbolosTerminales.RPAREN, 	yytext());	}
-  	"="          			{ return new Symbol(SimbolosTerminales.EQUALS, 	yytext()); 	}
-  	"+"          			{ return new Symbol(SimbolosTerminales.PLUS, 	yytext()); 	}													}
-  	"-"          			{ return new Symbol(SimbolosTerminales.MINUS, 	yytext()); 	}												}
-  	"*"          			{ return new Symbol(SimbolosTerminales.TIMES, 	yytext()); 	}												}
-  	"/"          			{ return new Symbol(SimbolosTerminales.DIVIDED, yytext());	}
+	";"          			{ return new Symbol(SimbolosTerminales.SEMI, 	SEMI);
+	"("          			{ return new Symbol(SimbolosTerminales.LPAREN, 	LPAREN); 													}
+  	")"          			{ return new Symbol(SimbolosTerminales.RPAREN, 	RPAREN);
+  	"="          			{ return new Symbol(SimbolosTerminales.EQUALS, 	EQUALS); 
+  	";"          			{ return new Symbol(SimbolosTerminales.SEMI, 	SEMI); 
+  	"+"          			{ return new Symbol(SimbolosTerminales.PLUS, 	PLUS); 														}
+  	"-"          			{ return new Symbol(SimbolosTerminales.MINUS, 	MINUS); 													}
+  	"*"          			{ return new Symbol(SimbolosTerminales.TIMES, 	TIMES); 													}
+  	"/"          			{ return new Symbol(SimbolosTerminales.DIVIDED, DIVIDED);
   				
 
 }

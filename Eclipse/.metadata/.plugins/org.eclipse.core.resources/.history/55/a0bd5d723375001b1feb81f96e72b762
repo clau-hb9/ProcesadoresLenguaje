@@ -11,17 +11,10 @@ public interface SimbolosTerminales {
 		 public static final int EMAIL = 5;
 		 public static final int MATRICULA = 6;
 		 public static final int FECHA = 7;
-		 public static final int HEXADECIMAL = 8;
-		 public static final int SEMI = 9;
-		 public static final int LPAREN = 10;
-		 public static final int RPAREN = 11;
-		 public static final int EQUALS = 12;
-		 public static final int PLUS = 13;
-		 public static final int MINUS = 14;
-		 public static final int TIMES = 15;
-		 public static final int DIVIDED = 16;
-			  
-	
+		// public static final int nombre = 2;
+		// public static final int numero = 3;
+		// …
+
 		 /* lista de nombres, util para devolver información por pantalla */
 		 public static final String[] terminalNames = new String[] {
 		 "EOF",
@@ -31,18 +24,11 @@ public interface SimbolosTerminales {
 		 "NAME",
 		 "EMAIL",
 		 "MATRICULA",
-		 "FECHA",
-		 "HEXADECIMAL",
-		 "SEMI",
-		 "LPAREN",
-		 "RPAREN",
-		 "EQUALS",
-		 "PLUS",
-		 "MINUS",
-		 "TIMES",
-		 "DIVIDED"
+		 "FECHA"
 		 
-		
+		// ,"nombre",
+		// "numero"
+		//....
 		 };
 
 }
