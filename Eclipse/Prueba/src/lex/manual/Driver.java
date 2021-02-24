@@ -14,6 +14,7 @@ class Driver {
 	
 	if (args.length >= 1) {
 		System.out.println("Leyendo entrada de fichero... ");
+		
 		dataStream = new FileInputStream(args[0]);
 	} else {
 	System.out.println("Inserta expresiones a reconocer pulsando <ENTER> entre ellas");
@@ -29,7 +30,7 @@ class Driver {
 		try {
 			Symbol token = scanner.next_token();
 			symbols.add(token);
-			end = (token == null);
+			end = (token.value() == null);
 			if (!end) {
 				 System.out.println("Encontrado: {" + token.type() + " - "+SimbolosTerminales.terminalNames[token.type()]+ "} >> " + token.value());
 			 }

@@ -31,7 +31,7 @@ Whitespace = [ \t\f] | {Newline}
 /*Numeros*/
 
 Hex         = "0x"[0-9|A-F]+        /* Macro for Hexadecimal numbers */
-Real 		= [0-9]+ ("." [0-9]+)?
+Real 		= ("+"|"-")? [0-9]+ ("." [0-9]+)?
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -62,27 +62,37 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 <YYINITIAL> {
 
   	{Whitespace} 				{                              }
+  	
   	/* Comentarios */
   	{Comment} 					{                              }
-	{Real}      				{ return new Symbol(SimbolosTerminales.NUMBER, Double.parseDouble(yytext()));}
-	{Hex}						{return new Symbol(SimbolosTerminales.HEXADECIMAL, Long.decode(yytext()).doubleValue()); }
+  	
+  	/* NUMEROS */
+	{Real}      				{ return new Symbol(SimbolosTerminales.NUMBER, 		Double.parseDouble(yytext()));			}
+	{Hex}						{return new Symbol(SimbolosTerminales.HEXADECIMAL, 	Long.decode(yytext()).doubleValue()); 	}
 	
 	/* Datos identificativos */
-	{DNI}						{return new Symbol(SimbolosTerminales.DNI, yytext());}
-	{nombre_completo}			{return new Symbol(SimbolosTerminales.NAME, yytext());}
-	{Email}						{return new Symbol(SimbolosTerminales.EMAIL, yytext());}
-	{Matricula}					{return new Symbol(SimbolosTerminales.MATRICULA, yytext());}
-	{Fecha}						{return new Symbol(SimbolosTerminales.FECHA, yytext());}
+	{DNI}						{return new Symbol(SimbolosTerminales.DNI,			yytext());}
+	{nombre_completo}			{return new Symbol(SimbolosTerminales.NAME, 		yytext());}
+	{Email}						{return new Symbol(SimbolosTerminales.EMAIL, 		yytext());}
+	{Matricula}					{return new Symbol(SimbolosTerminales.MATRICULA, 	yytext());}
+	{Fecha}						{return new Symbol(SimbolosTerminales.FECHA, 		yytext());}
+	
+	
+	
+	
 	
 	/* Operadores y separadores */
+	
 	";"          			{ return new Symbol(SimbolosTerminales.SEMI, 	yytext());	}
-	"("          			{ return new Symbol(SimbolosTerminales.LPAREN, 	yytext()); 	}												}
+	"("          			{ return new Symbol(SimbolosTerminales.LPAREN, 	yytext()); 	}												
   	")"          			{ return new Symbol(SimbolosTerminales.RPAREN, 	yytext());	}
   	"="          			{ return new Symbol(SimbolosTerminales.EQUALS, 	yytext()); 	}
-  	"+"          			{ return new Symbol(SimbolosTerminales.PLUS, 	yytext()); 	}													}
-  	"-"          			{ return new Symbol(SimbolosTerminales.MINUS, 	yytext()); 	}												}
-  	"*"          			{ return new Symbol(SimbolosTerminales.TIMES, 	yytext()); 	}												}
+  	"+"          			{ return new Symbol(SimbolosTerminales.PLUS, 	yytext()); 	}													
+  	"-"          			{ return new Symbol(SimbolosTerminales.MINUS, 	yytext()); 	}												
+  	"*"          			{ return new Symbol(SimbolosTerminales.TIMES, 	yytext()); 	}												
   	"/"          			{ return new Symbol(SimbolosTerminales.DIVIDED, yytext());	}
+  	
+  	
   				
 
 }
