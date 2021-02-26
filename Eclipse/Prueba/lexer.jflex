@@ -30,8 +30,8 @@ Whitespace = [ \t\f] | {Newline}
 
 /*Numeros*/
 
-Hex         = "0x"[0-9|A-F]+        /* Macro for Hexadecimal numbers */
-Real 		= ("+"|"-")? [0-9]+ ("." [0-9]+)?
+Hex         = ("0X"|"0x") [0-9|A-F]+        /* Macro for Hexadecimal numbers */
+Real 		= [0-9]+ ("." [0-9]+)?
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -41,12 +41,12 @@ CommentContent = ( [^*] | \*+[^*/] )*
 
 /* Datos identificativos */
 
-nombre_completo		= {Name} ({Whitespace} {Name})+
+nombre_completo		= {Name}({Whitespace} {Name})+
 Name				= ([A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*) (\-[A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*)*
 Email				= [A-Za-z0-9\_\-]+ \@ ([A-Za-z0-9\_\-]+ \.)+ [A-Za-z0-9]+
 DNI					= [0-9]{8} [A-Z]
-Matricula			= [0-9]{4} [ ]? [B-DF-HJ-—P-TV-Z]{3}
-Fecha				= ([0-2][0-9]|(3)[0-1]) "/" (((0)[0-9])|((1)[0-2])) "/" [0-9]{4}
+Matricula			= [0-9]{4} [B-DF-HJ-—P-TV-Z]{3}
+Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-9]{4}
 
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
@@ -67,8 +67,8 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   	{Comment} 					{                              }
   	
   	/* NUMEROS */
-	{Real}      				{ return new Symbol(SimbolosTerminales.NUMBER, 		Double.parseDouble(yytext()));			}
-	{Hex}						{return new Symbol(SimbolosTerminales.HEXADECIMAL, 	Long.decode(yytext()).doubleValue()); 	}
+	{Real}      				{ return new Symbol(SimbolosTerminales.NUMBER, 		Double.parseDouble(yytext()));		}
+	{Hex}						{return new Symbol(SimbolosTerminales.NUMBER, 	Long.decode(yytext()).doubleValue()); 	}
 	
 	/* Datos identificativos */
 	{DNI}						{return new Symbol(SimbolosTerminales.DNI,			yytext());}
@@ -86,7 +86,6 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 	";"          			{ return new Symbol(SimbolosTerminales.SEMI, 	yytext());	}
 	"("          			{ return new Symbol(SimbolosTerminales.LPAREN, 	yytext()); 	}												
   	")"          			{ return new Symbol(SimbolosTerminales.RPAREN, 	yytext());	}
-  	"="          			{ return new Symbol(SimbolosTerminales.EQUALS, 	yytext()); 	}
   	"+"          			{ return new Symbol(SimbolosTerminales.PLUS, 	yytext()); 	}													
   	"-"          			{ return new Symbol(SimbolosTerminales.MINUS, 	yytext()); 	}												
   	"*"          			{ return new Symbol(SimbolosTerminales.TIMES, 	yytext()); 	}												
