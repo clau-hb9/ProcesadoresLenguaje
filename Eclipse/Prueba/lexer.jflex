@@ -30,8 +30,9 @@ Whitespace = [ \t\f] | {Newline}
 
 /*Numeros*/
 
-Hex         = ("0X"|"0x") [0-9|A-F]+        /* Macro for Hexadecimal numbers */
-Real 		= [0-9]+ ("." [0-9]+)?
+Hex         = ("0X"|"0x") [0-9|A-F|a-f]+        /* Macro for Hexadecimal numbers */
+Real 		= [0-9]+ ("." [0-9]+)? ((E|e)("+"|"-")? [0-9]+)?
+
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -43,10 +44,10 @@ CommentContent = ( [^*] | \*+[^*/] )*
 
 nombre_completo		= {Name}({Whitespace} {Name})+
 Name				= ([A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*) (\-[A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*)*
-Email				= [A-Za-z0-9\_\-]+ \@ ([A-Za-z0-9\_\-]+ \.)+ [A-Za-z0-9]+
+Email				= [A-Za-z0-9\_\-\.]+ \@ [A-Za-z0-9\_\-]+ \. ([a-z]{2,4})+
 DNI					= [0-9]{8} [A-Z]
-Matricula			= [0-9]{4} [B-DF-HJ-—P-TV-Z]{3}
-Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-9]{4}
+Matricula			= [0-9]{4} [BCDFGHJKLMNPRSTVWXYZ]{3}
+Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-2] [0-9]{3}
 
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
