@@ -19,20 +19,24 @@ import lex.manual.Symbol;
 
 /*Valores y codigo que se va a ejecutar cuando se llegue al final del fichero*/
 %eofval{
+	System.out.println("\nLeidas: "+yyline + " lineas, " + yychar + " caracteres");
     return new Symbol(EOF);
 %eofval}
+
+
 
 
 /*MACROS Y EXPRESIONES REGULARES*/
 /*Espacios*/
 Newline    = \r | \n | \r\n
-Whitespace = [ \t\f] | {Newline}
+Whitespace = [ \t\f] 
 
 /*Numeros*/
 
 Hex         = ("0X"|"0x") [0-9|A-F|a-f]+        /* Macro for Hexadecimal numbers */
 Real 		= [0-9]+ ("." [0-9]+)? ((E|e)("+"|"-")? [0-9]+)?
 
+//PREGUNTAR SI LOS DE NOTACION CIENTIFICA PUEDEN SER 1E0.2
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -44,10 +48,10 @@ CommentContent = ( [^*] | \*+[^*/] )*
 
 nombre_completo		= {Name}({Whitespace} {Name})+
 Name				= ([A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*) (\-[A-Z¡…Õ”⁄][a-z·ÈÌÛ˙]*)*
-Email				= [A-Za-z0-9\_\-\.]+ \@ [A-Za-z0-9\_\-]+ \. ([a-z]{2,4})+
-DNI					= [0-9]{8} [A-Z]
-Matricula			= [0-9]{4} [BCDFGHJKLMNPRSTVWXYZ]{3}
-Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-2] [0-9]{3}
+Email				= [A-Za-z0-9\_\-\.]+ \@ ([A-Za-z0-9\_\-]+ \.)+ ([a-z]{2,4})+
+DNI					= [0-9]{8} [A-Za-z]
+Matricula			= [0-9]{4} ({Whitespace}|"-")? [BCDFGHJKLMNPRSTVWXYZ]{3}
+Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-9]{4}
 
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
@@ -63,13 +67,14 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 <YYINITIAL> {
 
   	{Whitespace} 				{                              }
+  	{Newline} 					{                              }
   	
   	/* Comentarios */
   	{Comment} 					{                              }
   	
   	/* NUMEROS */
-	{Real}      				{ return new Symbol(SimbolosTerminales.NUMBER, 		Double.parseDouble(yytext()));		}
-	{Hex}						{return new Symbol(SimbolosTerminales.NUMBER, 	Long.decode(yytext()).doubleValue()); 	}
+	{Real}      				{ return new Symbol(SimbolosTerminales.NUMBER, 		Double.parseDouble(yytext()));			}
+	{Hex}						{return new Symbol(SimbolosTerminales.NUMBER, 		Long.decode(yytext()).doubleValue()); 	}
 	
 	/* Datos identificativos */
 	{DNI}						{return new Symbol(SimbolosTerminales.DNI,			yytext());}

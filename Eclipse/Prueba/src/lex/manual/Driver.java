@@ -40,6 +40,7 @@ class Driver {
 		}
 	}
 	symbols.trimToSize();
+	System.out.println("\nNumero de tokens: " + symbols.size());
 	System.out.println("\n\n -- Bye-bye -- ");
 	}
 }
