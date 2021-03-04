@@ -5707,3 +5707,11 @@ java.nio.file.NoSuchFileException: C:\Users\claud\Documents\UNIVERSIDAD\05_Quint
 !MESSAGE Save operation warnings.
 !SUBENTRY 1 org.eclipse.core.resources 2 234 2021-03-04 19:25:50.207
 !MESSAGE The project description file (.project) for 'P1.2' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+
+!ENTRY org.eclipse.ui.ide 4 4 2021-03-04 21:34:34.250
+!MESSAGE Problems saving workspace
+
+!ENTRY org.eclipse.ui.ide 2 1 2021-03-04 21:34:34.268
+!MESSAGE Problems occurred while trying to save the state of the workbench.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2021-03-04 21:34:34.268
+!MESSAGE The project description file (.project) for 'P1.2' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
