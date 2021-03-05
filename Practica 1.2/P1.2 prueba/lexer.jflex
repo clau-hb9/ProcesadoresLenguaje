@@ -23,12 +23,21 @@ import src.lex.manual.Symbol;
 
 
 %{
-	public int primer_miembro;
-	public int segundo_miembro;
-	public String operador="";
+	 int primer_miembro;
+	 int segundo_miembro;
+	 String operador="";
+	
 	
 	public int sumar (int a, int b){
 		return a+b;
+	}
+	
+	public int restar (int a, int b){
+		return a-b;
+	}
+	
+	public int multiplicar (int a, int b){
+		return a*b;
 	}
 
 %}
@@ -49,13 +58,14 @@ EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 
 
-Real 		= [0-9]
+Real 		= "-"? [0-9]+
 
 
 
 
 
 %%
+
 
 
 <YYINITIAL>{
@@ -66,22 +76,32 @@ Real 		= [0-9]
   	/* Comentarios */
   	{Comment} 					{                              	}
   	
-  	{Real}      				{ yybegin(OPERACION);
+  	{Real}      				{ 	yybegin(OPERACION);
   									primer_miembro = Integer.parseInt(yytext());
+  									
   								}
   	
+  	
 }
- 
 <OPERACION>{
 	{Newline} 					{                              	}
 	{Whitespace} 				{                              	}
-	"+" 						{	System.out.println(primer_miembro);
-									operador += '+';
+	"+" 						{	
+									operador = "+";
 									yybegin(SEGUNDO_MIEMBRO);
 								}
-	"-" 						{ 	System.out.println("resta");
+	"-" 						{ 	
+									operador = "-";
 									yybegin(SEGUNDO_MIEMBRO);
 								}
+	"*" 						{ 	
+									operador = "*";
+									yybegin(SEGUNDO_MIEMBRO);
+								}
+	";"							{	System.out.println("RESULTADO: "+ primer_miembro);
+									yybegin(YYINITIAL);
+								}
+	
 
 } 
 
@@ -89,23 +109,39 @@ Real 		= [0-9]
 	{Newline} 					{                              	}
 	{Whitespace} 				{                              	}
 	{Real} 						{	segundo_miembro = Integer.parseInt(yytext());
-									System.out.println(operador);
-									yybegin(FINAL_OPERACION);
-								}
-
-}	
-
-<FINAL_OPERACION>{
-	{Newline} 					{                             	}
-	{Whitespace} 				{                              	}
-	";"							{	//if (operador.equals('+') ){
+									if (operador.equals("+") ){
 										int suma = sumar(primer_miembro, segundo_miembro);
-										System.out.println(suma);
+										primer_miembro = suma;
+										
+										yybegin(OPERACION);
 							
-									//}
+									}
+									if (operador.equals("-")){
+										int resta = restar(primer_miembro, segundo_miembro);
+										primer_miembro = resta;
+										
+										
+										yybegin(OPERACION);
+							
+									}
+									if (operador.equals("*")){
+										int multiplicacion = multiplicar(primer_miembro, segundo_miembro);
+										primer_miembro = multiplicacion;
+										
+										yybegin(OPERACION);
+							
+									}
 								}
+								
 
 }
+
+
+
+
+
+
+
 	
   
 /* Reglas para detectar los tokens y acciones asociadas */

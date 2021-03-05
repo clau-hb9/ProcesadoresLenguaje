@@ -36,7 +36,7 @@ Whitespace = [ \t\f]
 Hex         = ("0X"|"0x") [0-9|A-F|a-f]+        /* Macro for Hexadecimal numbers */
 Real 		= [0-9]+ ("." [0-9]+)? ((E|e)("+"|"-")? [0-9]+)?
 
-//PREGUNTAR SI LOS DE NOTACION CIENTIFICA PUEDEN SER 1E0.2
+
 
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment}

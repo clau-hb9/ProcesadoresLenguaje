@@ -1,5 +1,4 @@
 INDEX VERSION 1.131+C:\Users\claud\Documents\UNIVERSIDAD\05_Quinto\Segundo_cuatri\Procesadores_Lenguaje\Github-Lazaro\ProcesadoresLenguaje\Eclipse\.metadata\.plugins\org.eclipse.jdt.core
-380964222.index
 2435432913.index
 133969532.index
 3482742528.index
@@ -7,8 +6,8 @@ INDEX VERSION 1.131+C:\Users\claud\Documents\UNIVERSIDAD\05_Quinto\Segundo_cuatr
 1632238658.index
 2247224413.index
 2298930795.index
-2102515725.index
 2513918375.index
+2102515725.index
 3506654133.index
 1718787464.index
 4279352321.index
