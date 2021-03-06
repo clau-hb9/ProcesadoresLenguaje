@@ -23,6 +23,10 @@ class Driver {
 	// Creamos el objeto scanner
 	Lexer scanner = new Lexer(dataStream);
 	ArrayList<Symbol> symbols = new ArrayList<Symbol>();
+	ArrayList<Integer> token_types = new ArrayList<Integer>();
+	ArrayList<Object> token_value = new ArrayList<Object>();
+	
+
 	
 	// Mientras no alcancemos el fin de la entrada
 	boolean end = false;
@@ -31,15 +35,27 @@ class Driver {
 			Symbol token = scanner.next_token();
 			symbols.add(token);
 			end = (token.value() == null);
-			if (!end) {
+			token_types.add(token.type());
+			token_value.add(token.value());
+			
+			/*if (!end) {
 				 System.out.println("Encontrado: {" + token.type() + " - "+SimbolosTerminales.terminalNames[token.type()]+ "} >> " + token.value());
-			 }
+			 }*/
 		} catch (Exception x) {
 		System.out.println("Ups... algo ha ido mal");
 		x.printStackTrace();
 		}
 	}
 	symbols.trimToSize();
+	// Lo utilizo para recorrer todos los simbolos terminales
+	for ( int i = 2; i < 17; i++) {
+		for ( int j = 0; j < token_types.size(); j++ ) {
+			if(token_types.get(j) == i) {
+				 System.out.println("Encontrado: {" + token_types.get(j) + " - "+SimbolosTerminales.terminalNames[token_types.get(j)]+ "} >> " + token_value.get(j));	
+			}
+		}
+	}
+	
 	System.out.println("\nNumero de tokens: " + symbols.size());
 	System.out.println("\n\n -- Bye-bye -- ");
 	}
