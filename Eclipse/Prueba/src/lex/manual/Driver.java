@@ -35,12 +35,7 @@ class Driver {
 			Symbol token = scanner.next_token();
 			symbols.add(token);
 			end = (token.value() == null);
-			token_types.add(token.type());
-			token_value.add(token.value());
 			
-			/*if (!end) {
-				 System.out.println("Encontrado: {" + token.type() + " - "+SimbolosTerminales.terminalNames[token.type()]+ "} >> " + token.value());
-			 }*/
 		} catch (Exception x) {
 		System.out.println("Ups... algo ha ido mal");
 		x.printStackTrace();
@@ -49,12 +44,13 @@ class Driver {
 	symbols.trimToSize();
 	// Lo utilizo para recorrer todos los simbolos terminales
 	for ( int i = 2; i < 17; i++) {
-		for ( int j = 0; j < token_types.size(); j++ ) {
-			if(token_types.get(j) == i) {
-				 System.out.println("Encontrado: {" + token_types.get(j) + " - "+SimbolosTerminales.terminalNames[token_types.get(j)]+ "} >> " + token_value.get(j));	
+		for ( int j = 0; j < symbols.size(); j++ ) {
+			if(symbols.get(j).type() == i) {
+				 System.out.println("Encontrado: {" + symbols.get(j).type() + " - "+SimbolosTerminales.terminalNames[symbols.get(j).type()]+ "} >> " + symbols.get(j).value());	
 			}
 		}
 	}
+	
 	
 	System.out.println("\nNumero de tokens: " + symbols.size());
 	System.out.println("\n\n -- Bye-bye -- ");
