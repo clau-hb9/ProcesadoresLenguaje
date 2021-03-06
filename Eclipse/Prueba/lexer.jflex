@@ -47,7 +47,7 @@ CommentContent = ( [^*] | \*+[^*/] )*
 /* Datos identificativos */
 
 nombre_completo		= {Name}({Whitespace} {Name})+
-Name				= ([A-ZÁÉÍÓÚ][a-záéíóú]*) (\-[A-ZÁÉÍÓÚ][a-záéíóú]*)*
+Name				= ([A-ZÁÉÍÓÚ][a-záéíóú]*) ("-"[A-ZÁÉÍÓÚ][a-záéíóú]*)*
 Email				= [A-Za-z0-9\_\-\.]+ \@ ([A-Za-z0-9\_\-]+ \.)+ ([a-z]{2,4})+
 DNI					= [0-9]{8} [A-Za-z]
 Matricula			= [0-9]{4} ({Whitespace}|"-")? [BCDFGHJKLMNPRSTVWXYZ]{3}
@@ -58,8 +58,6 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 
 
-
-%state CODESEG
 
 %%  
 
