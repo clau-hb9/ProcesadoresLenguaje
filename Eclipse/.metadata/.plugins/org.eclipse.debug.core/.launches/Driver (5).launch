@@ -12,6 +12,6 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="lex.manual.Driver"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="Prueba"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:\Users\claud\Documents\UNIVERSIDAD\05_Quinto\Segundo_cuatri\Procesadores_Lenguaje\Github-Lazaro\ProcesadoresLenguaje\Eclipse\Prueba\input.txt"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:\Users\claud\Documents\UNIVERSIDAD\05_Quinto\Segundo_cuatri\Procesadores_Lenguaje\Github-Lazaro\ProcesadoresLenguaje\Practica1.2\P1.2-prueba\input.txt"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Prueba"/>
 </launchConfiguration>

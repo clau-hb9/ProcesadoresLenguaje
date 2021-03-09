@@ -39,6 +39,10 @@ import src.lex.manual.Symbol;
 	public int multiplicar (int a, int b){
 		return a*b;
 	}
+	
+	public int dividir (int a, int b){
+		return a/b;
+	}
 
 %}
 
@@ -73,7 +77,7 @@ Real 		= "-"? [0-9]+
 	{Whitespace} 				{                              }
   	{Newline} 					{                              }
   	
-  	/* Comentarios */
+  	
   	{Comment} 					{                              	}
   	
   	{Real}      				{ 	yybegin(OPERACION);
@@ -86,6 +90,7 @@ Real 		= "-"? [0-9]+
 <OPERACION>{
 	{Newline} 					{                              	}
 	{Whitespace} 				{                              	}
+	{Comment} 					{                              	}
 	"+" 						{	
 									operador = "+";
 									yybegin(SEGUNDO_MIEMBRO);
@@ -98,6 +103,10 @@ Real 		= "-"? [0-9]+
 									operador = "*";
 									yybegin(SEGUNDO_MIEMBRO);
 								}
+	"/" 						{ 	
+									operador = "/";
+									yybegin(SEGUNDO_MIEMBRO);
+								}
 	";"							{	System.out.println("RESULTADO: "+ primer_miembro);
 									yybegin(YYINITIAL);
 								}
@@ -108,6 +117,7 @@ Real 		= "-"? [0-9]+
 <SEGUNDO_MIEMBRO>{
 	{Newline} 					{                              	}
 	{Whitespace} 				{                              	}
+	{Comment} 					{                              	}
 	{Real} 						{	segundo_miembro = Integer.parseInt(yytext());
 									if (operador.equals("+") ){
 										int suma = sumar(primer_miembro, segundo_miembro);
@@ -127,6 +137,14 @@ Real 		= "-"? [0-9]+
 									if (operador.equals("*")){
 										int multiplicacion = multiplicar(primer_miembro, segundo_miembro);
 										primer_miembro = multiplicacion;
+										
+										yybegin(OPERACION);
+							
+									}
+									
+									if (operador.equals("/")){
+										int division = dividir(primer_miembro, segundo_miembro);
+										primer_miembro = division;
 										
 										yybegin(OPERACION);
 							

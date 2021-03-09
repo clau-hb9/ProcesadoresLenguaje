@@ -19,19 +19,20 @@ class Driver {
 			ArrayList<Symbol> symbols = new ArrayList<Symbol>();
 			// Mientras no alcancemos el fin de la entrada
 			boolean end = false;
+			
 			while (!end) {
-				//try {
+				
+				try {
 					Symbol token = scanner.next_token();
 					symbols.add(token);
-					end = (token == null);
-				/*if (!end) {
-					 System.out.println("Encontrado: {" + token.type() + " - " +SimbolosTerminales.terminalNames[token.type()]+ "} >> " + token.value());
-					 }
+					end = (token.value() == null);
+				
 				} catch (Exception x) {
 					System.out.println("Ups... algo ha ido mal");
 					x.printStackTrace();
-				}*/
 				}
+				}
+			
 			symbols.trimToSize();
 			System.out.println("\n\n -- Bye-bye -- ");
 			}

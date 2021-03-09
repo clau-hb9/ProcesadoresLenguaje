@@ -23,8 +23,7 @@ class Driver {
 	// Creamos el objeto scanner
 	Lexer scanner = new Lexer(dataStream);
 	ArrayList<Symbol> symbols = new ArrayList<Symbol>();
-	ArrayList<Integer> token_types = new ArrayList<Integer>();
-	ArrayList<Object> token_value = new ArrayList<Object>();
+	
 	
 
 	
