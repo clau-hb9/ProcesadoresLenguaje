@@ -20,6 +20,7 @@ class Driver {
 			// Mientras no alcancemos el fin de la entrada
 			boolean end = false;
 			
+			System.out.println("\n\n -- Mostramos los resultados de la operación al completo -- ");
 			while (!end) {
 				
 				try {

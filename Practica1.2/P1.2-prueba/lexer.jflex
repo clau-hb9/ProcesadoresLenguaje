@@ -82,6 +82,7 @@ Real 		= "-"? [0-9]+
   	
   	{Real}      				{ 	yybegin(OPERACION);
   									primer_miembro = Integer.parseInt(yytext());
+  									System.out.print("RESULTADO: "+ primer_miembro);
   									
   								}
   	
@@ -93,21 +94,25 @@ Real 		= "-"? [0-9]+
 	{Comment} 					{                              	}
 	"+" 						{	
 									operador = "+";
+									System.out.print(" + ");
 									yybegin(SEGUNDO_MIEMBRO);
 								}
 	"-" 						{ 	
 									operador = "-";
+									System.out.print(" - ");
 									yybegin(SEGUNDO_MIEMBRO);
 								}
 	"*" 						{ 	
 									operador = "*";
+									System.out.print(" * ");
 									yybegin(SEGUNDO_MIEMBRO);
 								}
 	"/" 						{ 	
 									operador = "/";
+									System.out.print(" / ");
 									yybegin(SEGUNDO_MIEMBRO);
 								}
-	";"							{	System.out.println("RESULTADO: "+ primer_miembro);
+	";"							{	System.out.println(" = "+ primer_miembro);
 									yybegin(YYINITIAL);
 								}
 	
@@ -119,9 +124,11 @@ Real 		= "-"? [0-9]+
 	{Whitespace} 				{                              	}
 	{Comment} 					{                              	}
 	{Real} 						{	segundo_miembro = Integer.parseInt(yytext());
+									System.out.print(segundo_miembro);
 									if (operador.equals("+") ){
 										int suma = sumar(primer_miembro, segundo_miembro);
 										primer_miembro = suma;
+										
 										
 										yybegin(OPERACION);
 							
