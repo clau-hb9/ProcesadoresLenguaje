@@ -1,0 +1,96 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+
+parser code {:
+  protected Lexer lexer;
+
+  private double MEM[] = new double[10];
+
+  private boolean isDouble(Double d) {
+	return d != null && d.intValue() != d;
+  }
+
+  private String var(Integer i, Double d) {
+	MEM[i] = d;			
+	if (isDouble(d)) { return "MEM" + i + " = " + d; }
+	else 			 { return "MEM" + i + " = " + d.intValue(); }
+  }
+
+  private void showExpr(Double d) {
+	if (isDouble(d)) { System.out.println(d); }
+	else 			 { System.out.println(d.intValue()); }
+  }
+:}
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+
+  lexer = new Lexer(f,fis);
+:};
+
+scan with {: 
+  return lexer.next_token(); 
+:};
+
+/* Terminals (tokens returned by the scanner). */
+terminal            	SEMI, PLUS, MINUS, TIMES, DIVIDED, EXP, LN, LPAREN, RPAREN, EQUALS;
+terminal Integer    	MEM;
+terminal Double	    	NUMBER;
+
+/* Non terminals */
+non terminal            expr_list, assignment;
+non terminal Double	    exprA, exprB, exprC;
+non terminal Integer	sign;
+
+/* The grammar rules */
+expr_list 	::=   expr_list exprA:e1 		SEMI    {: showExpr(e1); 			:}
+            	| exprA:e1 					SEMI    {: showExpr(e1);			:}
+            	| expr_list assignment:a1 	SEMI    {: System.out.println(a1);	:}
+            	| assignment:a1 			SEMI    {: System.out.println(a1);	:}
+            	;
+            	
+assignment 	::=   MEM:m1   EQUALS  exprA:e1 		{: RESULT = var(m1, e1);	:}
+				;
+            
+exprA		::=   exprA:e1 PLUS    exprB:e2			{: RESULT = e1 + e2; 		:}
+				| exprA:e1 MINUS   exprB:e2			{: RESULT = e1 - e2; 		:}
+				| exprB:e1							{: RESULT = e1; 			:}
+       			;
+       			
+exprB		::=   exprB:e1 TIMES   exprC:e2			{: RESULT = e1 * e2; 		:}
+				| exprB:e1 DIVIDED exprC:e2			{: RESULT = e1 / e2; 		:}
+				| exprC:e1							{: RESULT = e1; 			:}
+       			;		
+       			
+exprC		::=   sign:s1  LPAREN  exprA:e1 RPAREN	{: RESULT = s1 * e1; 		:}
+				| sign:s1  NUMBER:n1				{: RESULT = s1 * n1; 		:}
+				| EXP  	   LPAREN  exprA:e1 RPAREN	{: RESULT = Math.exp(e1);	:}
+				| LN  	   LPAREN  exprA:e1 RPAREN	{: RESULT = Math.log(e1);	:}
+				| MEM:m1							{: RESULT = MEM[m1];		:}
+       			;
+       			
+sign		::=	  MINUS								{: RESULT = -1; 			:}
+				| PLUS								{: RESULT =  1; 			:}
+				| 									{: RESULT =  1;	 			:}
+				;

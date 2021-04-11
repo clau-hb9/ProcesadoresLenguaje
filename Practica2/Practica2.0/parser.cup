@@ -1,0 +1,79 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+
+parser code {:
+  protected Lexer lexer;
+	
+	private double MEM[] = new double[10]; 
+	private boolean isDouble(Double d) {
+		return d != null && d.intValue() != d;
+  	}
+
+	private String var(Integer i, Double d) {
+		MEM[i] = d;			
+		if (isDouble(d)) { return "MEM" + i + " = " + d; }
+		else 			 { return "MEM" + i + " = " + d.intValue(); }
+  	}
+	private void showExpr(Double d) {
+		if (isDouble(d)) { System.out.println(d); }
+		else 			 { System.out.println(d.intValue()); }
+ 	}
+:}
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+  lexer = new Lexer(f,fis);
+:};
+scan with {: return lexer.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, EXP, LOG, COS, SIN;
+terminal Integer    	MEM;
+terminal Double	    	NUMBER;
+
+/* Non terminals */
+non terminal            expr_list;
+non terminal Double    expr;      // used to store evaluated subexpressions
+
+/* Precedences */
+precedence left PLUS, MINUS;
+precedence left TIMES;
+precedence left UMINUS;
+
+/* The grammar rules */
+expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
+            | expr:e SEMI                   {: System.out.println(e); :}
+            ;
+            
+expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
+             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
+             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
+             | MINUS expr:e                 {: RESULT = -e;           :}
+             | EXP LPAREN expr:e  RPAREN    {: RESULT = Math.exp(e);  :}
+             | LOG LPAREN expr:e  RPAREN    {: RESULT = Math.log(e);  :}
+             | COS LPAREN expr:e  RPAREN    {: RESULT = Math.cos(e);  :}
+             | SIN LPAREN expr:e  RPAREN    {: RESULT = Math.sin(e);  :}
+             %prec UMINUS
+             | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
+             | NUMBER:n	                     {: RESULT = n;           :}
+             ;
+       
