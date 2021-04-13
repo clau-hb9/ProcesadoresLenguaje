@@ -34,11 +34,13 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\015\000\002\002\005\000\002\002\004\000\002\002" +
-    "\004\000\002\003\005\000\002\003\005\000\002\003\005" +
-    "\000\002\003\004\000\002\003\006\000\002\003\006\000" +
-    "\002\003\006\000\002\003\006\000\002\003\005\000\002" +
-    "\003\003" });
+    "\000\026\000\002\002\005\000\002\002\004\000\002\002" +
+    "\004\000\002\002\005\000\002\002\004\000\002\003\005" +
+    "\000\002\004\005\000\002\004\005\000\002\004\003\000" +
+    "\002\005\005\000\002\005\005\000\002\005\003\000\002" +
+    "\006\006\000\002\006\006\000\002\006\006\000\002\006" +
+    "\006\000\002\006\004\000\002\006\006\000\002\006\003" +
+    "\000\002\007\003\000\002\007\003\000\002\007\002" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -46,45 +48,63 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\043\000\020\006\004\011\012\013\013\014\014\015" +
-    "\010\016\005\020\007\001\002\000\020\006\004\011\012" +
-    "\013\013\014\014\015\010\016\005\020\007\001\002\000" +
-    "\004\011\042\001\002\000\022\002\037\006\004\011\012" +
-    "\013\013\014\014\015\010\016\005\020\007\001\002\000" +
-    "\014\004\ufff5\005\ufff5\006\ufff5\010\ufff5\012\ufff5\001\002" +
-    "\000\004\011\034\001\002\000\012\004\033\005\020\006" +
-    "\021\010\022\001\002\000\020\006\004\011\012\013\013" +
-    "\014\014\015\010\016\005\020\007\001\002\000\004\011" +
-    "\026\001\002\000\004\011\015\001\002\000\020\006\004" +
-    "\011\012\013\013\014\014\015\010\016\005\020\007\001" +
-    "\002\000\012\005\020\006\021\010\022\012\017\001\002" +
-    "\000\014\004\ufff9\005\ufff9\006\ufff9\010\ufff9\012\ufff9\001" +
-    "\002\000\020\006\004\011\012\013\013\014\014\015\010" +
-    "\016\005\020\007\001\002\000\020\006\004\011\012\013" +
-    "\013\014\014\015\010\016\005\020\007\001\002\000\020" +
-    "\006\004\011\012\013\013\014\014\015\010\016\005\020" +
-    "\007\001\002\000\014\004\ufffc\005\ufffc\006\ufffc\010\ufffc" +
-    "\012\ufffc\001\002\000\014\004\ufffd\005\ufffd\006\ufffd\010" +
-    "\022\012\ufffd\001\002\000\014\004\ufffe\005\ufffe\006\ufffe" +
-    "\010\022\012\ufffe\001\002\000\020\006\004\011\012\013" +
-    "\013\014\014\015\010\016\005\020\007\001\002\000\012" +
-    "\005\020\006\021\010\022\012\030\001\002\000\014\004" +
-    "\ufffa\005\ufffa\006\ufffa\010\ufffa\012\ufffa\001\002\000\012" +
-    "\005\020\006\021\010\022\012\032\001\002\000\014\004" +
-    "\ufff6\005\ufff6\006\ufff6\010\ufff6\012\ufff6\001\002\000\022" +
-    "\002\uffff\006\uffff\011\uffff\013\uffff\014\uffff\015\uffff\016" +
-    "\uffff\020\uffff\001\002\000\020\006\004\011\012\013\013" +
-    "\014\014\015\010\016\005\020\007\001\002\000\012\005" +
-    "\020\006\021\010\022\012\036\001\002\000\014\004\ufff8" +
-    "\005\ufff8\006\ufff8\010\ufff8\012\ufff8\001\002\000\004\002" +
-    "\000\001\002\000\012\004\041\005\020\006\021\010\022" +
-    "\001\002\000\022\002\001\006\001\011\001\013\001\014" +
-    "\001\015\001\016\001\020\001\001\002\000\020\006\004" +
-    "\011\012\013\013\014\014\015\010\016\005\020\007\001" +
-    "\002\000\012\005\020\006\021\010\022\012\044\001\002" +
-    "\000\014\004\ufff7\005\ufff7\006\ufff7\010\ufff7\012\ufff7\001" +
-    "\002\000\014\004\ufffb\005\ufffb\006\ufffb\010\022\012\ufffb" +
-    "\001\002" });
+    "\000\060\000\024\005\014\006\004\011\uffec\013\017\014" +
+    "\020\015\015\016\011\021\013\022\uffec\001\002\000\006" +
+    "\011\uffed\022\uffed\001\002\000\016\004\ufff6\005\ufff6\006" +
+    "\ufff6\010\ufff6\012\ufff6\017\ufff6\001\002\000\016\004\ufff9" +
+    "\005\ufff9\006\ufff9\010\031\012\ufff9\017\030\001\002\000" +
+    "\010\004\062\005\025\006\026\001\002\000\006\011\057" +
+    "\022\056\001\002\000\004\011\053\001\002\000\026\002" +
+    "\047\005\014\006\004\011\uffec\013\017\014\020\015\015" +
+    "\016\011\021\013\022\uffec\001\002\000\016\004\uffef\005" +
+    "\uffef\006\uffef\010\uffef\017\uffef\020\044\001\002\000\006" +
+    "\011\uffee\022\uffee\001\002\000\004\011\041\001\002\000" +
+    "\004\004\040\001\002\000\004\011\035\001\002\000\004" +
+    "\011\021\001\002\000\024\005\014\006\004\011\uffec\013" +
+    "\017\014\020\015\015\016\011\021\023\022\uffec\001\002" +
+    "\000\010\005\025\006\026\012\024\001\002\000\016\004" +
+    "\uffef\005\uffef\006\uffef\010\uffef\012\uffef\017\uffef\001\002" +
+    "\000\016\004\ufff4\005\ufff4\006\ufff4\010\ufff4\012\ufff4\017" +
+    "\ufff4\001\002\000\024\005\014\006\004\011\uffec\013\017" +
+    "\014\020\015\015\016\011\021\023\022\uffec\001\002\000" +
+    "\024\005\014\006\004\011\uffec\013\017\014\020\015\015" +
+    "\016\011\021\023\022\uffec\001\002\000\016\004\ufffa\005" +
+    "\ufffa\006\ufffa\010\031\012\ufffa\017\030\001\002\000\024" +
+    "\005\014\006\004\011\uffec\013\017\014\020\015\015\016" +
+    "\011\021\023\022\uffec\001\002\000\024\005\014\006\004" +
+    "\011\uffec\013\017\014\020\015\015\016\011\021\023\022" +
+    "\uffec\001\002\000\016\004\ufff8\005\ufff8\006\ufff8\010\ufff8" +
+    "\012\ufff8\017\ufff8\001\002\000\016\004\ufff7\005\ufff7\006" +
+    "\ufff7\010\ufff7\012\ufff7\017\ufff7\001\002\000\016\004\ufffb" +
+    "\005\ufffb\006\ufffb\010\031\012\ufffb\017\030\001\002\000" +
+    "\024\005\014\006\004\011\uffec\013\017\014\020\015\015" +
+    "\016\011\021\023\022\uffec\001\002\000\010\005\025\006" +
+    "\026\012\037\001\002\000\016\004\ufff5\005\ufff5\006\ufff5" +
+    "\010\ufff5\012\ufff5\017\ufff5\001\002\000\026\002\ufffd\005" +
+    "\ufffd\006\ufffd\011\ufffd\013\ufffd\014\ufffd\015\ufffd\016\ufffd" +
+    "\021\ufffd\022\ufffd\001\002\000\024\005\014\006\004\011" +
+    "\uffec\013\017\014\020\015\015\016\011\021\023\022\uffec" +
+    "\001\002\000\010\005\025\006\026\012\043\001\002\000" +
+    "\016\004\ufff3\005\ufff3\006\ufff3\010\ufff3\012\ufff3\017\ufff3" +
+    "\001\002\000\024\005\014\006\004\011\uffec\013\017\014" +
+    "\020\015\015\016\011\021\023\022\uffec\001\002\000\010" +
+    "\004\ufffc\005\025\006\026\001\002\000\010\004\052\005" +
+    "\025\006\026\001\002\000\004\002\000\001\002\000\004" +
+    "\004\051\001\002\000\026\002\ufffe\005\ufffe\006\ufffe\011" +
+    "\ufffe\013\ufffe\014\ufffe\015\ufffe\016\ufffe\021\ufffe\022\ufffe" +
+    "\001\002\000\026\002\001\005\001\006\001\011\001\013" +
+    "\001\014\001\015\001\016\001\021\001\022\001\001\002" +
+    "\000\024\005\014\006\004\011\uffec\013\017\014\020\015" +
+    "\015\016\011\021\023\022\uffec\001\002\000\010\005\025" +
+    "\006\026\012\055\001\002\000\016\004\ufff2\005\ufff2\006" +
+    "\ufff2\010\ufff2\012\ufff2\017\ufff2\001\002\000\016\004\ufff1" +
+    "\005\ufff1\006\ufff1\010\ufff1\012\ufff1\017\ufff1\001\002\000" +
+    "\024\005\014\006\004\011\uffec\013\017\014\020\015\015" +
+    "\016\011\021\023\022\uffec\001\002\000\010\005\025\006" +
+    "\026\012\061\001\002\000\016\004\ufff0\005\ufff0\006\ufff0" +
+    "\010\ufff0\012\ufff0\017\ufff0\001\002\000\026\002\uffff\005" +
+    "\uffff\006\uffff\011\uffff\013\uffff\014\uffff\015\uffff\016\uffff" +
+    "\021\uffff\022\uffff\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -92,19 +112,28 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\043\000\006\002\005\003\010\001\001\000\004\003" +
-    "\044\001\001\000\002\001\001\000\004\003\037\001\001" +
+    "\000\060\000\016\002\011\003\015\004\006\005\005\006" +
+    "\004\007\007\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\004\003\030\001\001\000\002\001\001\000\002\001\001" +
-    "\000\004\003\015\001\001\000\002\001\001\000\002\001" +
-    "\001\000\004\003\024\001\001\000\004\003\023\001\001" +
-    "\000\004\003\022\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\004\003\026\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\004\003\034\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\004\003\042\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001" });
+    "\002\001\001\000\014\003\047\004\045\005\005\006\004" +
+    "\007\007\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\012\004\021\005\005\006\004\007\007\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\010\005\033\006\004\007\007\001\001\000\010\005" +
+    "\026\006\004\007\007\001\001\000\002\001\001\000\006" +
+    "\006\032\007\007\001\001\000\006\006\031\007\007\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\012\004\035\005\005\006\004\007\007\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\012" +
+    "\004\041\005\005\006\004\007\007\001\001\000\002\001" +
+    "\001\000\002\001\001\000\012\004\044\005\005\006\004" +
+    "\007\007\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\012\004\053\005\005\006\004\007\007\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\012\004\057\005\005\006\004\007\007\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -172,19 +201,19 @@ public class Parser extends java_cup.runtime.lr_parser {
 
   protected Lexer lexer;
 	
-	private double MEM[] = new double[10]; 
-	private boolean isDouble(Double d) {
-		return d != null && d.intValue() != d;
+	private double MEM[] = new double[100]; 
+	private boolean isDouble(Double number) {
+		return number != null && number.intValue() != number;
   	}
 
-	private String var(Integer i, Double d) {
-		MEM[i] = d;			
-		if (isDouble(d)) { return "MEM" + i + " = " + d; }
-		else 			 { return "MEM" + i + " = " + d.intValue(); }
+	private String resultadoString (Integer position, Double result) {
+		MEM[position] = result;			
+		if (isDouble(result)) { return "MEM[" + position +"]= " + result; }
+		else 			 	  { return "MEM[" + position +"]= " + result.intValue(); }
   	}
-	private void showExpr(Double d) {
-		if (isDouble(d)) { System.out.println(d); }
-		else 			 { System.out.println(d.intValue()); }
+	private void result (Double number) {
+		if (isDouble(number)) { System.out.println(number); }
+		else 			 	  { System.out.println(number.intValue()); }
  	}
 
 
@@ -213,14 +242,14 @@ class CUP$Parser$actions {
       switch (CUP$Parser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // expr_list ::= expr_list expr SEMI 
+          case 0: // expr_list ::= expr_list A SEMI 
             {
               Object RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG3
- System.out.println(e); 
+ result(a1); 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_list",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -240,154 +269,274 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // expr_list ::= expr SEMI 
+          case 2: // expr_list ::= A SEMI 
             {
               Object RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG4
- System.out.println(e); 
+ System.out.println("RESULTADO: "); result(a1); 							
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_list",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // expr ::= expr PLUS expr 
+          case 3: // expr_list ::= expr_list guardar SEMI 
             {
-              Double RESULT =null;
-		Location e1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
-		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
-		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
-		Location e2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
-		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		Double e2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+              Object RESULT =null;
+		Location mem1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location mem1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Object mem1 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG5
- RESULT = e1+e2;        
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ System.out.println(mem1);			
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_list",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // expr ::= expr MINUS expr 
+          case 4: // expr_list ::= guardar SEMI 
             {
-              Double RESULT =null;
-		Location e1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
-		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
-		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
-		Location e2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
-		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		Double e2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+              Object RESULT =null;
+		Location mem1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location mem1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Object mem1 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG6
- RESULT = e1-e2;        
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ System.out.println(mem1); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_list",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // expr ::= expr TIMES expr 
+          case 5: // guardar ::= MEM EQUALS A 
             {
-              Double RESULT =null;
-		Location e1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
-		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
-		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
-		Location e2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
-		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		Double e2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+              Object RESULT =null;
+		Location memoriaxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location memoriaxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Integer memoria = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG7
- RESULT = e1*e2;        
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+RESULT = resultadoString(memoria, a1);	
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("guardar",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // expr ::= MINUS expr 
+          case 6: // A ::= A PLUS B 
             {
               Double RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location a2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG8
- RESULT = -e;           
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ RESULT = a1 + a2;System.out.println("Detecto la suma: " + a1 + "+" + a2 ); 		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("A",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // expr ::= EXP LPAREN expr RPAREN 
+          case 7: // A ::= A MINUS B 
             {
               Double RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location a2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG9
- RESULT = Math.exp(e);  
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ RESULT = a1 - a2;System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("A",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // expr ::= LOG LPAREN expr RPAREN 
+          case 8: // A ::= B 
             {
               Double RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG10
- RESULT = Math.log(e);  
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ RESULT = a1; 	System.out.println("Genero A: " + a1  );						
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("A",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // expr ::= COS LPAREN expr RPAREN 
+          case 9: // B ::= B TIMES C 
             {
               Double RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location a2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG11
- RESULT = Math.cos(e);  
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ RESULT = a1 * a2; System.out.println("Detecto la multi: " + a1 + "*" + a2 );		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("B",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // expr ::= SIN LPAREN expr RPAREN 
+          case 10: // B ::= B DIVIDED C 
             {
               Double RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location a2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG12
- RESULT = Math.sin(e);  
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ RESULT = a1 / a2; System.out.println("Detecto la div: " + a1 + "/" + a2 );		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("B",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // expr ::= LPAREN expr RPAREN 
+          case 11: // B ::= C 
             {
               Double RESULT =null;
-		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
-		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG13
- RESULT = e;           
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+ RESULT = a1; 	 System.out.println("Genero B: " + a1  );						
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("B",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // expr ::= NUMBER 
+          case 12: // C ::= EXP LPAREN A RPAREN 
             {
               Double RESULT =null;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG14
+ RESULT = Math.exp(a1);	System.out.println("Detecto el exp(" + a1 + ")" );		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 13: // C ::= LOG LPAREN A RPAREN 
+            {
+              Double RESULT =null;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG15
+ RESULT = Math.log(a1);	System.out.println("Detecto el log(" + a1 + ")" );		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 14: // C ::= COS LPAREN A RPAREN 
+            {
+              Double RESULT =null;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG16
+ RESULT = Math.cos(a1);  	System.out.println("Detecto el cos(" + a1 + ")" );		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 15: // C ::= SIN LPAREN A RPAREN 
+            {
+              Double RESULT =null;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG17
+ RESULT = Math.sin(a1);   System.out.println("Detecto el sin(" + a1 + ")" );		
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 16: // C ::= sign NUMBER 
+            {
+              Double RESULT =null;
+		Location signoxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location signoxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Integer signo = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		Location nxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location nxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double n = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		//@@CUPDBG14
- RESULT = n;           
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+		//@@CUPDBG18
+ RESULT = signo * n;  	System.out.println("Detecto el numero: " + n);			
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 17: // C ::= sign LPAREN A RPAREN 
+            {
+              Double RESULT =null;
+		Location signoxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location signoxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		Integer signo = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location a1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location a1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Double a1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG19
+ RESULT = signo * a1;  	System.out.println("Signo expresión: " + signo);
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 18: // C ::= MEM 
+            {
+              Double RESULT =null;
+		Location memoriaxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location memoriaxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Integer memoria = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG20
+ RESULT = MEM[memoria];		System.out.println("Guardo en MEM: " + memoria);			
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("C",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 19: // sign ::= PLUS 
+            {
+              Integer RESULT =null;
+		//@@CUPDBG21
+ RESULT =  1; 			System.out.println("Detecto signo + " );				
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("sign",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 20: // sign ::= MINUS 
+            {
+              Integer RESULT =null;
+		//@@CUPDBG22
+ RESULT = -1; 			System.out.println("Detecto signo - " );				
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("sign",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 21: // sign ::= 
+            {
+              Integer RESULT =null;
+		//@@CUPDBG23
+ RESULT =  1; 			System.out.println("No detecto" );						
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("sign",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 

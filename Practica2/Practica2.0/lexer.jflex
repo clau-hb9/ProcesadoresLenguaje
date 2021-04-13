@@ -81,6 +81,8 @@ DNI					= [0-9]{8} [A-Za-z]
 Matricula			= [0-9]{4} ({Whitespace}|"-")? [BCDFGHJKLMNPRSTVWXYZ]{3}
 Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-9]{4}
 
+varMEM			= "MEM[" {number} "]"
+number 			= [0-9]+
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
@@ -110,6 +112,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 	  "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
 	  "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
 	  "*"          { return symbolFactory.newSymbol("TIMES", TIMES); }
+	  "/"		   { return symbolFactory.newSymbol("DIVIDED",DIVIDED);}
 	  "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
 	  "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
 	  ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
@@ -119,6 +122,9 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 	"log"          	{ return symbolFactory.newSymbol("LOG", 	LOG);  }
 	"cos"          	{ return symbolFactory.newSymbol("COS", 	COS);  }
 	"sin"          	{ return symbolFactory.newSymbol("SIN", 	SIN);  }
+	{varMEM}		{ 
+					  return symbolFactory.newSymbol("MEM", 	MEM, Integer.parseInt(yytext().substring(4,yytext().length()-1))); }
+	"="          	{ return symbolFactory.newSymbol("EQUALS", EQUALS); }
 }
 
 

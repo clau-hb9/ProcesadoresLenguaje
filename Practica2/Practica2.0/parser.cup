@@ -14,19 +14,19 @@ import java.io.FileInputStream;
 parser code {:
   protected Lexer lexer;
 	
-	private double MEM[] = new double[10]; 
-	private boolean isDouble(Double d) {
-		return d != null && d.intValue() != d;
+	private double MEM[] = new double[100]; 
+	private boolean isDouble(Double number) {
+		return number != null && number.intValue() != number;
   	}
 
-	private String var(Integer i, Double d) {
-		MEM[i] = d;			
-		if (isDouble(d)) { return "MEM" + i + " = " + d; }
-		else 			 { return "MEM" + i + " = " + d.intValue(); }
+	private String resultadoString (Integer position, Double result) {
+		MEM[position] = result;			
+		if (isDouble(result)) { return "MEM[" + position +"]= " + result; }
+		else 			 	  { return "MEM[" + position +"]= " + result.intValue(); }
   	}
-	private void showExpr(Double d) {
-		if (isDouble(d)) { System.out.println(d); }
-		else 			 { System.out.println(d.intValue()); }
+	private void result (Double number) {
+		if (isDouble(number)) { System.out.println(number); }
+		else 			 	  { System.out.println(number.intValue()); }
  	}
 :}
 
@@ -46,34 +46,49 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, EXP, LOG, COS, SIN;
+terminal            	SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, EXP, LOG, COS, SIN, DIVIDED, EQUALS;
 terminal Integer    	MEM;
 terminal Double	    	NUMBER;
 
 /* Non terminals */
-non terminal            expr_list;
-non terminal Double    expr;      // used to store evaluated subexpressions
 
-/* Precedences */
-precedence left PLUS, MINUS;
-precedence left TIMES;
-precedence left UMINUS;
+non terminal            expr_list, guardar;
+non terminal Double	    A, B, C;
+non terminal Integer	sign;
 
-/* The grammar rules */
-expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
-            | expr:e SEMI                   {: System.out.println(e); :}
-            ;
+
+expr_list 	::=   expr_list A:a1 		SEMI    {: result(a1); 			:}
+            	| A:a1 					SEMI    {: System.out.println("RESULTADO: "); result(a1); 							:}
+				| expr_list guardar:mem1 		SEMI    {: System.out.println(mem1);			:}
+            	| guardar:mem1 				SEMI    {: System.out.println(mem1); :} 
+            	;
+guardar		::= MEM:memoria EQUALS A:a1		{:RESULT = resultadoString(memoria, a1);	:}
+				;            	
+				
             
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
-             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | MINUS expr:e                 {: RESULT = -e;           :}
-             | EXP LPAREN expr:e  RPAREN    {: RESULT = Math.exp(e);  :}
-             | LOG LPAREN expr:e  RPAREN    {: RESULT = Math.log(e);  :}
-             | COS LPAREN expr:e  RPAREN    {: RESULT = Math.cos(e);  :}
-             | SIN LPAREN expr:e  RPAREN    {: RESULT = Math.sin(e);  :}
-             %prec UMINUS
-             | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
-             | NUMBER:n	                     {: RESULT = n;           :}
-             ;
-       
+A			::=   A:a1 PLUS    B:a2			{: RESULT = a1 + a2;System.out.println("Detecto la suma: " + a1 + "+" + a2 ); 		:}
+				| A:a1 MINUS   B:a2			{: RESULT = a1 - a2;System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 		:}
+				| B:a1						{: RESULT = a1; 	System.out.println("Genero A: " + a1  );						:}
+       			;
+       			
+B			::=   B:a1 TIMES   C:a2			{: RESULT = a1 * a2; System.out.println("Detecto la multi: " + a1 + "*" + a2 );		:}
+				| B:a1 DIVIDED C:a2			{: RESULT = a1 / a2; System.out.println("Detecto la div: " + a1 + "/" + a2 );		:}
+				| C:a1						{: RESULT = a1; 	 System.out.println("Genero B: " + a1  );						:}
+       			;		
+       			
+C			::= EXP LPAREN  A:a1 RPAREN	{: RESULT = Math.exp(a1);	System.out.println("Detecto el exp(" + a1 + ")" );		:}
+				| LOG LPAREN  A:a1 RPAREN	{: RESULT = Math.log(a1);	System.out.println("Detecto el log(" + a1 + ")" );		:}
+				| COS LPAREN  A:a1 RPAREN   {: RESULT = Math.cos(a1);  	System.out.println("Detecto el cos(" + a1 + ")" );		:}
+             	| SIN LPAREN  A:a1 RPAREN   {: RESULT = Math.sin(a1);   System.out.println("Detecto el sin(" + a1 + ")" );		:}
+				| sign:signo  NUMBER:n	    {: RESULT = signo * n;  	System.out.println("Detecto el numero: " + n);			:}		
+       			| sign:signo  LPAREN A:a1 RPAREN    {: RESULT = signo * a1;  	System.out.println("Signo expresión: " + signo);:}	
+       			| MEM:memoria				{: RESULT = MEM[memoria];		System.out.println("Inicializo MEM[" + memoria +"] = 0");			:}
+       			;
+
+
+
+sign		::=  PLUS						{: RESULT =  1; 			System.out.println("Detecto signo + " );				:} 
+				|MINUS						{: RESULT = -1; 			System.out.println("Detecto signo - " );				:}
+				|							{: RESULT =  1; 			System.out.println("No detecto signo" );						:}
+				;
+
