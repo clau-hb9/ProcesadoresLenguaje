@@ -25,6 +25,9 @@ parser code {:
 		if (isDouble(result)) { return "MEM[" + position +"]= " + result; }
 		else 			 	  { return "MEM[" + position +"]= " + result.intValue(); }
   	}
+
+	
+
 	private void result (Double number) {
 		if (isDouble(number)) { System.out.println(number); }
 		else 			 	  { System.out.println(number.intValue()); }
@@ -71,20 +74,22 @@ non terminal Double	    A, B, C;
 non terminal Integer	sign;
 
 
-expr_list 	::=   expr_list A:a1 				SEMI    {: result(a1); 			:}
-            	| A:a1 							SEMI    {: System.out.println("RESULTADO: "); result(a1); 							:}
+expr_list 	::=   expr_list A:a1 				SEMI    {: System.out.print("RESULTADO: ");result(a1); 			:}
+            	| A:a1 							SEMI    {: System.out.print("RESULTADO: "); result(a1); 							:}
 				| expr_list guardar:mem1 		SEMI    {: System.out.println(mem1);			:}
             	| guardar:mem1 					SEMI    {: System.out.println(mem1); :} 
+            	
             	;
 guardar		::= MEM:memoria EQUALS A:a1		{: RESULT = guardoResultadoMem(memoria, a1);	:}
-										
-				;            	
+				//| D:a1						{: RESULT = guardoResultadoMem(getPosition(), a1);	:}						
+				;            				
 				
+  
+
             
 A			::=   A:a1 PLUS    B:a2			{: RESULT = a1 + a2;	/*	System.out.println("Detecto la suma: " + a1 + "+" + a2 ); 	*/	:}
 				| A:a1 MINUS   B:a2			{: RESULT = a1 - a2;	/*	System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 	*/	:}
-				| sign:signo LPAREN B:a1 MINUS   MINUS  RPAREN 			{: RESULT = a1;		updateValuePosition(a1-1.0);	/*System.out.println("Detecto postdecremento: " + a1 + "--" ); */	:}
-				| sign:signo LPAREN B:a1 PLUS    PLUS RPAREN			{: RESULT = a1;		updateValuePosition(a1+1.0);	/*System.out.println("Detecto postincremento: " + a1 + "++" );*/ 	:}
+				
 				| B:a1						{: RESULT = a1; 			/*System.out.println("Genero A: " + a1  );		*/				:}
        			;
        			
@@ -93,22 +98,19 @@ B			::=   B:a1 TIMES   C:a2			{: RESULT = a1 * a2; 		/*System.out.println("Detec
 				| B:a1 DIVIDED C:a2			{: RESULT = a1 / a2; 		/*System.out.println("Detecto la div: " + a1 + "/" + a2 );	*/	:}
 				| C:a1						{: RESULT = a1; 	 		/*System.out.println("Genero B: " + a1  );		*/				:}
        			;		
+     			
        			
-       			
-C			::=  	
-				 EXP LPAREN  A:a1 RPAREN	{: RESULT = Math.exp(a1);	/*	System.out.println("Detecto el exp(" + a1 + ")" );	*/			:}
+C			::=  EXP LPAREN   A:a1 RPAREN	{: RESULT = Math.exp(a1);	/*	System.out.println("Detecto el exp(" + a1 + ")" );	*/			:}
 				| LOG LPAREN  A:a1 RPAREN	{: RESULT = Math.log(a1);	/*System.out.println("Detecto el log(" + a1 + ")" );	*/			:}
 				| COS LPAREN  A:a1 RPAREN   {: RESULT = Math.cos(a1); 	/* 	System.out.println("Detecto el cos(" + a1 + ")" );	*/			:}
              	| SIN LPAREN  A:a1 RPAREN   {: RESULT = Math.sin(a1); 	/*  System.out.println("Detecto el sin(" + a1 + ")" );	*/			:}
              	| sign:signo LPAREN MINUS  MINUS MEM:memoria RPAREN	{: RESULT = signo*(MEM[memoria] - 1);	guardoResultadoMem(memoria, MEM[memoria]-1);		/*System.out.println("Detecto predecremento: --" + MEM[memoria]  ); */		:}
              	| sign:signo LPAREN PLUS   PLUS  MEM:memoria RPAREN	{: RESULT = signo *(MEM[memoria] + 1);	guardoResultadoMem(memoria, MEM[memoria]+1);		/*System.out.println("Detecto preincremento: ++" + MEM[memoria]  ); 	*/	:}
-
+ 				| MEM:memoria				{: RESULT = MEM[memoria];	setPosition(memoria);	/*System.out.println("Cojo valor MEM[" + memoria +"] ="+ MEM[memoria]);*/	:}
        			| sign:signo  NUMBER:n	    {: RESULT = signo * n;  	/*System.out.println("Detecto el numero: " + n);	*/				:}		
        			| sign:signo  LPAREN A:a1 RPAREN    {: RESULT = signo * a1;  	/*System.out.println("Signo expresión: " + signo);	*/	:}
-       			| MEM:memoria				{: RESULT = MEM[memoria];	setPosition(memoria);	/*System.out.println("Cojo valor MEM[" + memoria +"] ="+ MEM[memoria]);*/	:}
        			
        			;
-
 
 
 sign		::=  PLUS						{: RESULT =  1; 			/*System.out.println("Detecto signo + " );	*/					:} 

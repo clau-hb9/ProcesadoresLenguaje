@@ -1,2 +1,6 @@
-MEM[10];
-MEM[0] = MEM[0]+1;
+/* Operaciones */
+MEM[0] = 1;
+MEM[1] = 1;
+MEM[2] = (++MEM[0]) + 1;
+MEM[3] = (MEM[1]++) + 1;
+MEM[1];
