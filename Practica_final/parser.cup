@@ -1,0 +1,246 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import cup.example.tables.*;
+
+parser code {:
+  	protected Lexer lexer;
+
+
+	public static RegistroTabla tablaRegistro 	= new RegistroTabla();
+
+
+	private void result (Double number) {
+		if (isDouble(number)) { System.out.print(number); }
+		else 			 	  { System.out.print(number.intValue()); }
+ 	}
+
+	private boolean isDouble(Double number) {
+		return number != null && number.intValue() != number;
+  	}
+	
+	
+:}
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+  lexer = new Lexer(f,fis);
+:};
+scan with {: return lexer.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal String         VECTOR, WHILE, ENDWHILE, ENDIF, IF, ELSE, THEN, AND, OR, NOT,  PUNTO, 
+						COMA, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET, ASIGNACION, UMINUS, PLUS, MINUS, TIMES, DIVISION, MENORQUE, 
+						MAYORQUE, MENORIGQUE, MAYORIGQUE, IGUALQUE, IDENT;
+									
+terminal String			VARTYPE;	
+				
+terminal Double    		ENTERO;
+terminal Double			REAL;        
+terminal String 		BOOLEAN; 
+terminal String			CARACTER;
+
+
+
+/* Non terminals */
+non terminal           				program, sentencia, sent_decl, sent_uso, sent_flujo, decl_variable, asignacion, expresion,
+									condicional, bucle, identificador, else_condicional,bloque_sentencias,
+									Ejecucion, campos, dimension,
+									
+ 									variable_declaration, multiple_declaration, 
+									multiple_declaration_, params, params_, fields, identifier, conditional, loop, function_call, expr_list, 
+									expr_list_, inner_block, inner_sentence, regular_declaration, else_conditional;
+
+non terminal Double	    			expr, operando;
+non terminal String					expr_, operando_;
+
+
+/* Precedences */
+precedence nonassoc 				LPAREN;
+
+precedence left 					AND, OR;
+precedence left 					NOT;
+
+precedence nonassoc 				MENORQUE, MAYORQUE, MENORIGQUE, MAYORIGQUE, IGUALQUE;
+
+precedence left 					PLUS, MINUS;
+precedence left 					TIMES, DIVISION;
+precedence left 					UMINUS;
+
+/* The grammar rules */
+
+Ejecucion				::= bloque_sentencias
+							
+							;
+
+
+bloque_sentencias		::= 	sentencia		
+							|	bloque_sentencias sentencia
+							;
+
+sentencia				::=		sent_decl		
+
+							|	sent_uso  	
+								
+							|	sent_flujo	
+							;
+	
+
+// DECLARACION
+sent_decl				::=		decl_variable 			SEMI	
+
+							| 	multiple_declaration 	SEMI
+							;	
+
+
+							
+							
+decl_variable 			::=		VARTYPE:t1 IDENT:i1 ASIGNACION expr:e1
+								{: System.out.print(t1 + " " + i1 + ":="); result(e1); System.out.println(); 	:}	
+								
+							|	VARTYPE:t1 IDENT:i1 ASIGNACION operando_:e1
+								{: System.out.println(t1 + " " + i1 + ":=" + e1);   							:}	
+								
+							|	VARTYPE:t1 IDENT:i1 
+								{: RESULT= t1 + " " + i1;  														:}
+							
+							|	VECTOR VARTYPE:t1 IDENT:i1 dimension:d1
+								{: System.out.println("VECTOR " +t1 + " " + i1 + d1);  							:}
+							;
+							
+							
+multiple_declaration	::=		 decl_variable:d1  multiple_declaration_:m1
+								{: System.out.println(d1 +" "+ m1);  											:}
+							
+							;
+							
+
+multiple_declaration_ 	::=		COMA IDENT:i1 multiple_declaration_:m1
+								{: RESULT = ", " +  i1 +" "+ m1; 												:}
+								
+							|	COMA IDENT:i1
+								{: RESULT = ", " + i1;  														:}
+							
+							;						
+						
+						
+dimension				::=		dimension:d1 	LBRACKET 	expr:e1 	RBRACKET 
+								{:	RESULT= d1 + "["+ e1.intValue() +"]";  										:}
+						
+							| 	LBRACKET 		expr:e1 	RBRACKET
+									
+								{: 	RESULT= "["+ e1.intValue() +"]";  											:}
+								
+							;
+						
+							
+inner_block				::=		inner_block inner_sentence
+
+							|	inner_sentence
+							;
+						
+inner_sentence			::=		sent_decl 	
+
+							|	sent_uso  		
+								
+							|	sent_flujo			
+							;
+								
+
+// USO							
+sent_uso				::=		asignacion 	SEMI	
+							|	expr  		SEMI
+							|	expr_ 		SEMI
+							;	
+	
+	
+asignacion				::=		IDENT:i1 ASIGNACION	expr:e1								{: System.out.print(i1+" := ");  result(e1); System.out.println();													:}
+							
+							|	IDENT:i1 ASIGNACION	expr_:b1							{: System.out.println(i1+" := " + b1); 																				:}
+							
+							|	IDENT:i1 dimension:d1 ASIGNACION	expr:e1				{: System.out.print(i1 + d1 + ":= "); result(e1); System.out.println();												:}
+							
+							|	IDENT:i1 dimension:d2 ASIGNACION	expr_:b1			{: System.out.println(i1 + d2 + ":= " + b1);  																		:}
+							;
+	
+							
+							
+expr					::= 	expr:a1 	PLUS 		operando:a2 			{: RESULT = a1 + a2;  	/*System.out.println("suma: " + RESULT);	*/							:}
+							|	expr:a1 	MINUS   	operando:a2				{: RESULT = a1 - a2;	/*	System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 	*/		:}		
+							|	expr:a1 	DIVISION 	operando:a2				{: RESULT = a1 / a2; 		/*System.out.println("Detecto la div: " + a1 + "/" + a2 );	*/		:}
+							|	expr:a1 	TIMES   	operando:a2				{: RESULT = a1 * a2; 		/*System.out.println("Detecto la multi: " + a1 + "*" + a2 );*/		:}
+							| 	operando:a1										{: RESULT = a1;																					:}
+							|	LPAREN 		expr:a1 	RPAREN					{: RESULT = a1;					System.out.println(a1 );										:}
+							;
+																												
+expr_					::= 	operando_:a1									{: RESULT = a1;																					:}
+							|	LPAREN 		expr_:a1 	RPAREN					{: RESULT = a1;					System.out.println(a1 );										:}
+									
+							
+
+							;
+							
+operando				::= 	ENTERO:n	    								{: RESULT = n;  		/*System.out.println("Detecto entero: " + n);		*/					:}
+							|	REAL:n											{: RESULT = n;			/*System.out.println("Detecto real: " + RESULT); 	*/							:}
+
+						;
+						
+operando_				::= 	CARACTER:c1										{: RESULT = c1;			/*System.out.println("caracter: " + RESULT); 	*/							:}
+							|	BOOLEAN:b1										{: RESULT = b1;			/*System.out.println("booleano: " + RESULT); 	*/							:}
+
+						;
+
+
+// FLUJO
+
+sent_flujo				::=		condicional 
+							|	bucle  
+							;	
+							
+condicional				::=		IF 
+								{:System.out.println("comienza CONDICIONAL ");  :}
+
+								expr:e1 
+								{:  :}
+
+								THEN inner_block:i1 else_condicional:c1
+								{:  :}
+							;
+
+
+else_condicional		::=		ELSE 
+								{: :}
+
+								inner_block ENDIF
+								
+							|	ENDIF
+							;
+							
+bucle					::=		WHILE
+								{: System.out.println("comienza BUCLE "); :}
+
+								expr
+								{:  :}
+
+								inner_block ENDWHILE
+								{:  :}
+							;	
+							

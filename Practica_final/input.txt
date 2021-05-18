@@ -1,0 +1,26 @@
+ENTERO a:= 1;
+VECTOR ENTERO b[2][2];
+REAL num;
+re1:= 80/10-5*3;
+bo:=true;
+c:='A';
+b[1]:= 2;
+b[2]:='A';
+BOOLEANO seguir := true;
+REAL r1, r2;
+REAL r3;	//revisar
+
+SI 1+1 ENTONCES
+	2+2;
+SINO
+	1+1;
+FINSI
+
+MIENTRAS 1+1
+	2+2;
+FINMIENTRAS
+
+(2+2);
+('A');
+(false);
+

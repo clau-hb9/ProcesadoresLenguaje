@@ -1,0 +1,24 @@
+/* OPERACIONES BÁSICAS */
+5 * +3 - 80 / 10;							/* esta expresion debe resultar 7 		*/
+10 / 5 * 2; 								/* esta expresion debe resultar 4 		*/
+- 3 * 4 ;									/* esta expresion debe resultar -12 	*/
+5 * (4 - 3) / (8 - (4 - 1)); 				/* esta expresion debe resultar 1 		*/
+
+/* UTILIZAMOS LA VARIABLE MEM */
+MEM[1] = 5;									/* Guardo MEM[1] = 5					*/
+MEM[2] = (-(7 * MEM[1] + -6) * -1);			/* Guardo MEM[2] = 29 					*/
+MEM[2] - MEM[1] / 2; 						/* esta expresion debe resultar 26.5 	*/
+(MEM[2] - MEM[1]) / 2; 						/* esta expresion debe resultar 12 		*/
+
+
+/* OPCIONAL: PREINCREMENTO, POSTINCREMENTO, PREDECREMENTO, POSTDECREMENTO */
+MEM[0] = 1;									/* Guardo MEM[0] = 1					*/
+MEM[1] = 1;									/* Guardo MEM[1] = 1					*/
+MEM[2] = (++MEM[0]) + 1;					/* Guardo MEM[2] = 3					*/
+MEM[3] = (MEM[1]++) + 1;					/* Guardo MEM[3] = 2					*/
+MEM[0] ;									/* esta expresion debe resultar 2 		*/
+MEM[1] ;									/* esta expresion debe resultar 2 		*/
+MEM[2] ;									/* esta expresion debe resultar 3 		*/
+MEM[3] ;									/* esta expresion debe resultar 2 		*/
+
+MEM[99] = 50;								/* Guardo MEM[99] = 50					*/

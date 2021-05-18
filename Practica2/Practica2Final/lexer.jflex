@@ -81,8 +81,8 @@ DNI					= [0-9]{8} [A-Za-z]
 Matricula			= [0-9]{4} ({Whitespace}|"-")? [BCDFGHJKLMNPRSTVWXYZ]{3}
 Fecha				= ([0-2][0-9] | 3[0-1]) "/" ( (0[0-9]) | (1[0-2])) "/" [0-9]{4}
 
-varMEM			= "MEM[" {number} "]"
-number 			= [0-9]+
+varMEM			= "MEM[" [0-9]+ "]"
+
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 

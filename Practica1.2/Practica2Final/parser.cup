@@ -91,6 +91,8 @@ A			::=   A:a1 PLUS    B:a2			{: RESULT = a1 + a2;	/*	System.out.println("Detect
 				| A:a1 MINUS   B:a2			{: RESULT = a1 - a2;	/*	System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 	*/	:}
 				| A:a1 MINUS MINUS 			{: RESULT = MEM[getPosition()];		updateValuePosition(MEM[getPosition()]-1.0); 			:}
 				| A:a1 PLUS PLUS				{: RESULT = MEM[getPosition()];		updateValuePosition(MEM[getPosition()]+1.0); 		:}
+				| MINUS  MINUS A:a1 	{: RESULT = signo*(MEM[getPosition()] - 1);	updateValuePosition(MEM[getPosition()]-1.0);		/*System.out.println("Detecto predecremento: --" + MEM[memoria]  ); */		:}
+             	| PLUS   PLUS  A:a1 	{: RESULT = signo *(MEM[getPosition()] + 1);	updateValuePosition(MEM[getPosition()]+1.0);		/*System.out.println("Detecto preincremento: ++" + MEM[memoria]  ); 	*/	:}
 				| B:a1						{: RESULT = a1; 			/*System.out.println("Genero A: " + a1  );		*/				:}
        			;
        			
@@ -106,8 +108,8 @@ C			::=  EXP LPAREN   A:a1 RPAREN	{: RESULT = Math.exp(a1);	/*	System.out.printl
 				| LOG LPAREN  A:a1 RPAREN	{: RESULT = Math.log(a1);	/*System.out.println("Detecto el log(" + a1 + ")" );	*/			:}
 				| COS LPAREN  A:a1 RPAREN   {: RESULT = Math.cos(a1); 	/* 	System.out.println("Detecto el cos(" + a1 + ")" );	*/			:}
              	| SIN LPAREN  A:a1 RPAREN   {: RESULT = Math.sin(a1); 	/*  System.out.println("Detecto el sin(" + a1 + ")" );	*/			:}
-             	| sign:signo LPAREN MINUS  MINUS MEM:memoria RPAREN	{: RESULT = signo*(MEM[memoria] - 1);	guardoResultadoMem(memoria, MEM[memoria]-1);		/*System.out.println("Detecto predecremento: --" + MEM[memoria]  ); */		:}
-             	| sign:signo LPAREN PLUS   PLUS  MEM:memoria RPAREN	{: RESULT = signo *(MEM[memoria] + 1);	guardoResultadoMem(memoria, MEM[memoria]+1);		/*System.out.println("Detecto preincremento: ++" + MEM[memoria]  ); 	*/	:}
+             	//| sign:signo LPAREN MINUS  MINUS MEM:memoria RPAREN	{: RESULT = signo*(MEM[memoria] - 1);	guardoResultadoMem(memoria, MEM[memoria]-1);		/*System.out.println("Detecto predecremento: --" + MEM[memoria]  ); */		:}
+             	//| sign:signo LPAREN PLUS   PLUS  MEM:memoria RPAREN	{: RESULT = signo *(MEM[memoria] + 1);	guardoResultadoMem(memoria, MEM[memoria]+1);		/*System.out.println("Detecto preincremento: ++" + MEM[memoria]  ); 	*/	:}
              	//| sign:signo LPAREN MEM:memoria MINUS  MINUS  RPAREN	{: RESULT = signo*(MEM[memoria]);	guardoResultadoMem(memoria, MEM[memoria]-1);		/*System.out.println("Detecto predecremento: --" + MEM[memoria]  ); */		:}
              	//| sign:signo LPAREN MEM:memoria PLUS   PLUS   RPAREN	{: RESULT = signo *(MEM[memoria] );	guardoResultadoMem(memoria, MEM[memoria]+1);		/*System.out.println("Detecto preincremento: ++" + MEM[memoria]  ); 	*/	:}
  				| MEM:memoria				{: RESULT = MEM[memoria];	setPosition(memoria);	/*System.out.println("Hola Cojo valor MEM[" + memoria +"] ="+ MEM[memoria]);*/	:}
