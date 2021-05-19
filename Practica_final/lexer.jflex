@@ -73,7 +73,7 @@ CommentContent = ( [^*] | \*+[^*/] )*
 Entero		= [0-9] | [1-9][0-9]+
 Hex         = ("0X"|"0x") [0-9|A-F|a-f]+        /* Macro for Hexadecimal numbers */
 Real 		= [0-9]+ "." ([0-9]+)?
-Cientifica	= [1-9] ("." [0-9]+) ((E|e)("+"|"-")? [0-9]+)
+Cientifica	= [1-9] ("." [0-9]+)? ((E|e)("+"|"-")? [0-9]+)
 Caracter    = "'" .? "'"
 
 
@@ -125,10 +125,13 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 /* Tipo Variables */
 <YYINITIAL> {Vector}      	{ return symbolFactory.newSymbol("VECTOR", 	  	VECTOR); 														}
-<YYINITIAL> {EnteroVar}     { return symbolFactory.newSymbol("VARTYPE",    	VARTYPE, 		yytext()					); 					}
-<YYINITIAL> {RealVar}     	{ return symbolFactory.newSymbol("VARTYPE",		VARTYPE, 		yytext());									}
-<YYINITIAL> {Booleano}     	{ return symbolFactory.newSymbol("VARTYPE", 	VARTYPE, 		yytext());									}
-<YYINITIAL> {CaracterVar}   { return symbolFactory.newSymbol("VARTYPE", 	VARTYPE, 		yytext());									}
+<YYINITIAL> {EnteroVar}     { return symbolFactory.newSymbol("VARTYPE",    	VARTYPE, 		yytext()); 											}
+<YYINITIAL> {RealVar}     	{ return symbolFactory.newSymbol("VARTYPE",		VARTYPE, 		yytext());											}
+<YYINITIAL> {Booleano}     	{ return symbolFactory.newSymbol("VARTYPE", 	VARTYPE, 		yytext());											}
+<YYINITIAL> {CaracterVar}   { return symbolFactory.newSymbol("VARTYPE", 	VARTYPE, 		yytext());											}
+
+
+
 
 /* Estructuras de control */
 <YYINITIAL> {While}       	{ return symbolFactory.newSymbol("WHILE", 	  	WHILE); 														}
@@ -184,7 +187,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   
   /* Numbers */
   {Entero}     		    	{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  	Double.parseDouble(yytext()));					}
-  {Hex}			    		{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  	Long.decode(yytext()).intValue());				}
+  {Hex}			    		{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  	Long.decode(yytext()).doubleValue());				}
   {Real}      				{ return symbolFactory.newSymbol("REAL", 	    REAL, 	    	Double.parseDouble(yytext())); 					}
   {Cientifica}	  			{ return symbolFactory.newSymbol("REAL",  		REAL, 			Double.parseDouble(yytext())); 					}
   {Caracter}	            { return symbolFactory.newSymbol("CARACTER", 	CARACTER, 		yytext()); 					        }

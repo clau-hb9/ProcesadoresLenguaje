@@ -1,4 +1,4 @@
-ENTERO a:= 1;
+/*ENTERO a:= 1;
 VECTOR ENTERO b[2][2];
 REAL num;
 re1:= 80/10-5*3;
@@ -18,9 +18,18 @@ FINSI
 
 MIENTRAS 1+1
 	2+2;
-FINMIENTRAS
+FINMIENTRAS*/
 
-(2+2);
+/*(2+2);
 ('A');
 (false);
+*/
+REAL b:= 1.4;
+REAL c:=2;
+c;
 
+
+
+/*REAL b := 1.4;
+BOOLEANO c := true;
+CARACTER d := 'c';*/

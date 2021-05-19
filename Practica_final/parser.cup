@@ -10,13 +10,13 @@ import cup.example.Lexer;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
-import cup.example.tables.*;
+import java.util.Hashtable;
 
 parser code {:
   	protected Lexer lexer;
 
 
-	public static RegistroTabla tablaRegistro 	= new RegistroTabla();
+	Hashtable resgitroTable = new Hashtable();
 
 
 	private void result (Double number) {
@@ -51,7 +51,7 @@ terminal String         VECTOR, WHILE, ENDWHILE, ENDIF, IF, ELSE, THEN, AND, OR,
 						COMA, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET, ASIGNACION, UMINUS, PLUS, MINUS, TIMES, DIVISION, MENORQUE, 
 						MAYORQUE, MENORIGQUE, MAYORIGQUE, IGUALQUE, IDENT;
 									
-terminal String			VARTYPE;	
+terminal String 		VARTYPE;	
 				
 terminal Double    		ENTERO;
 terminal Double			REAL;        
@@ -63,7 +63,7 @@ terminal String			CARACTER;
 /* Non terminals */
 non terminal           				program, sentencia, sent_decl, sent_uso, sent_flujo, decl_variable, asignacion, expresion,
 									condicional, bucle, identificador, else_condicional,bloque_sentencias,
-									Ejecucion, campos, dimension,
+									Ejecucion, campos, dimension, booleano, identifier_val,
 									
  									variable_declaration, multiple_declaration, 
 									multiple_declaration_, params, params_, fields, identifier, conditional, loop, function_call, expr_list, 
@@ -87,49 +87,103 @@ precedence left 					UMINUS;
 
 /* The grammar rules */
 
-Ejecucion				::= bloque_sentencias
+Ejecucion				::= 	bloque_sentencias:b1
+								{: System.out.println(b1);				:}
 							
 							;
 
 
-bloque_sentencias		::= 	sentencia		
-							|	bloque_sentencias sentencia
+bloque_sentencias		::= 	sentencia:s1	
+								{: RESULT=  s1 ; 							:}
+								
+							|	bloque_sentencias:b1 sentencia:s1
+								{: RESULT= b1 + "\n" + s1; 				:}
 							;
 
-sentencia				::=		sent_decl		
+sentencia				::=		sent_decl:s1
+								{: RESULT=  s1; 						:}		
 
-							|	sent_uso  	
+							|	sent_uso:s1  	
+								{: RESULT=  s1;  						:}
 								
-							|	sent_flujo	
+							|	sent_flujo:s1	
+								{: RESULT=  s1; 						:}
 							;
 	
 
 // DECLARACION
-sent_decl				::=		decl_variable 			SEMI	
+sent_decl				::=		decl_variable:d1 		SEMI
+								{: RESULT=  d1 + ";"; 	:}	
 
-							| 	multiple_declaration 	SEMI
+							| 	multiple_declaration:d1 SEMI
+								{: RESULT=  d1 + ";"; 	:}
 							;	
 
 
 							
 							
 decl_variable 			::=		VARTYPE:t1 IDENT:i1 ASIGNACION expr:e1
-								{: System.out.print(t1 + " " + i1 + ":="); result(e1); System.out.println(); 	:}	
+								{: 	
+									if (t1.toLowerCase().equals("entero")){
+										resgitroTable.put( i1, e1.intValue() );
+										Integer value = ( Integer ) resgitroTable.get( i1);	
+										RESULT= "INICIALIZO " + i1 + " := " + value ;	
+									}
+									else if (t1.toLowerCase().equals("real")){
+										resgitroTable.put( i1, e1 );
+										Double value = ( Double ) resgitroTable.get( i1);	
+										RESULT= "INICIALIZO " + i1 + " := " + value ;		
+									}																			:}
 								
-							|	VARTYPE:t1 IDENT:i1 ASIGNACION operando_:e1
-								{: System.out.println(t1 + " " + i1 + ":=" + e1);   							:}	
+								
+							|	VARTYPE:t1 IDENT:i1 ASIGNACION expr_:e1
+								{: 
+									if (t1.toLowerCase().equals("booleano")){
+										resgitroTable.put( i1, Boolean.parseBoolean(e1) );
+										Boolean value = ( Boolean ) resgitroTable.get( i1);	
+										RESULT= "ASIGNO " + i1 + " := " + value ;		
+									}
+									else if (t1.toLowerCase().equals("caracter")){
+										resgitroTable.put( i1, e1.charAt(1) );
+										Character value = ( Character ) resgitroTable.get( i1);	
+										RESULT= "ASIGNO " + i1 + " := " + value ;		
+									}
+
+																												:}	
 								
 							|	VARTYPE:t1 IDENT:i1 
-								{: RESULT= t1 + " " + i1;  														:}
+								{: 
+									if (t1.toLowerCase().equals("entero")){
+										resgitroTable.put( i1, 0 );
+										Integer value = ( Integer ) resgitroTable.get( i1);	
+										RESULT= "INICIALIZO " + i1 + " := " + value ;	
+									}
+									else if (t1.toLowerCase().equals("real")){
+										resgitroTable.put( i1, 0.0 );
+										Double value = ( Double ) resgitroTable.get( i1);	
+										RESULT= "INICIALIZO " + i1 + " := " + value ;		
+									}
+									else if (t1.toLowerCase().equals("booleano")){
+										resgitroTable.put( i1, false );
+										Boolean value = ( Boolean ) resgitroTable.get( i1);	
+										RESULT= "INICIALIZO " + i1 + " := " + value ;		
+									}
+									else if (t1.toLowerCase().equals("caracter")){
+										resgitroTable.put( i1, ' ' );
+										Character value = ( Character ) resgitroTable.get( i1);	
+										RESULT= "INICIALIZO " + i1 + " := " + value ;		
+									}
+
+																												:}
 							
 							|	VECTOR VARTYPE:t1 IDENT:i1 dimension:d1
-								{: System.out.println("VECTOR " +t1 + " " + i1 + d1);  							:}
+								{: RESULT = "VECTOR " + t1 + " " + i1 + d1;  									:}
 							;
 							
 							
 multiple_declaration	::=		 decl_variable:d1  multiple_declaration_:m1
-								{: System.out.println(d1 +" "+ m1);  											:}
-							
+								{: RESULT= d1 +" "+ m1 ;  														:}
+								
 							;
 							
 
@@ -152,60 +206,148 @@ dimension				::=		dimension:d1 	LBRACKET 	expr:e1 	RBRACKET
 							;
 						
 							
-inner_block				::=		inner_block inner_sentence
 
-							|	inner_sentence
-							;
-						
-inner_sentence			::=		sent_decl 	
-
-							|	sent_uso  		
-								
-							|	sent_flujo			
-							;
 								
 
 // USO							
-sent_uso				::=		asignacion 	SEMI	
-							|	expr  		SEMI
-							|	expr_ 		SEMI
+sent_uso				::=		asignacion:a1 	SEMI	
+								{: RESULT=  a1 + ";"; 								:}
+								
+							|	expr_:s1  		SEMI
+								{: RESULT=  s1 + ";"; 								:}
+							
+							|	expr :s1		SEMI
+								{: 	
+									if (isDouble(s1)){	
+										RESULT=  s1 + ";"; 	 	
+									}
+									else {
+										RESULT=  s1.intValue() + ";" ;	
+										
+									}												:}
+									
+							|	booleano:b1 	SEMI
+								{: RESULT=  b1 ; 									:}
+																						
+	
 							;	
 	
 	
-asignacion				::=		IDENT:i1 ASIGNACION	expr:e1								{: System.out.print(i1+" := ");  result(e1); System.out.println();													:}
+asignacion				::=		IDENT:i1 ASIGNACION	expr:e1								{: 	if (isDouble(e1)){
+																								RESULT = i1+" := " + e1 ;	
+																							}
+																					 		else {
+																								RESULT = i1+" := " + e1.intValue() ;	
+																							}																							:}
 							
-							|	IDENT:i1 ASIGNACION	expr_:b1							{: System.out.println(i1+" := " + b1); 																				:}
+							|	IDENT:i1 ASIGNACION	expr_:b1							{: RESULT = i1+ " := " + b1; 																	:}
 							
-							|	IDENT:i1 dimension:d1 ASIGNACION	expr:e1				{: System.out.print(i1 + d1 + ":= "); result(e1); System.out.println();												:}
+							|	IDENT:i1 dimension:d1 ASIGNACION	expr:e1				{: 	if (isDouble(e1)){
+																								RESULT = i1 +" " + d1 + ":= " + e1;
+																							}
+																					 		else {
+																								RESULT = i1 +" " + d1 + ":= " + e1.intValue();
+																							}																							:}
 							
-							|	IDENT:i1 dimension:d2 ASIGNACION	expr_:b1			{: System.out.println(i1 + d2 + ":= " + b1);  																		:}
+							|	IDENT:i1 dimension:d2 ASIGNACION	expr_:b1			{: RESULT = i1 + " " + d2 + ":= " + b1;  														:}
 							;
 	
+
+
+booleano				::= 	expr:a1 	MENORQUE 	expr:a2 						{: 	if (a1 < a2) {
+																								RESULT = "True";
+																							}
+																							else {
+																								RESULT = "False";
+																							}
+																																														:}
+							|	expr:a1 	MAYORQUE 	expr:a2 						{: 	if (a1 > a2) {
+																								RESULT = "True";
+																							}
+																							else {
+																								RESULT = "False";
+																							}																							:}
+							
+							|	expr:a1 	IGUALQUE 	expr:a2 						{: 	if (a1 == a2) {
+																								RESULT = "True";
+																							}
+																							else {
+																								RESULT = "False";
+																							}																							:}
+																							
+							|	expr:a1 	MENORIGQUE 	expr:a2 						{: 	if (a1 <= a2) {
+																								RESULT = "True";
+																							}
+																							else {
+																								RESULT = "False";
+																							}																							:}
+																							
+							|	expr:a1 	MAYORIGQUE 	expr:a2 						{: 	if (a1 >= a2) {
+																								RESULT = "True";
+																							}
+																							else {
+																								RESULT = "False";
+																							}																							:}
+							;
+
+
+
 							
 							
-expr					::= 	expr:a1 	PLUS 		operando:a2 			{: RESULT = a1 + a2;  	/*System.out.println("suma: " + RESULT);	*/							:}
-							|	expr:a1 	MINUS   	operando:a2				{: RESULT = a1 - a2;	/*	System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 	*/		:}		
-							|	expr:a1 	DIVISION 	operando:a2				{: RESULT = a1 / a2; 		/*System.out.println("Detecto la div: " + a1 + "/" + a2 );	*/		:}
-							|	expr:a1 	TIMES   	operando:a2				{: RESULT = a1 * a2; 		/*System.out.println("Detecto la multi: " + a1 + "*" + a2 );*/		:}
-							| 	operando:a1										{: RESULT = a1;																					:}
-							|	LPAREN 		expr:a1 	RPAREN					{: RESULT = a1;					System.out.println(a1 );										:}
+expr					::= 	expr:a1 	PLUS 		operando:a2 					{: RESULT = a1 + a2;	/*	System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 	*/		:}
+							|	expr:a1 	MINUS   	operando:a2						{: RESULT = a1 - a2;	/*	System.out.println("Detecto la resta: " + a1 + "-" + a2 ); 	*/		:}		
+							|	expr:a1 	DIVISION 	operando:a2						{: RESULT = a1 / a2; 		/*System.out.println("Detecto la div: " + a1 + "/" + a2 );	*/		:}
+							|	expr:a1 	TIMES   	operando:a2						{: RESULT = a1 * a2; 		/*System.out.println("Detecto la multi: " + a1 + "*" + a2 );*/		:}
+							
+							| 	operando:a1												{: RESULT = a1;																					:}
+							|	LPAREN 		expr:a1 	RPAREN							{: RESULT = a1;					/*System.out.println(a1 );		*/								:}
+							|	identifier_val:a1										{: RESULT = new Double(a1.toString());																					:}
+							
+							
 							;
 																												
-expr_					::= 	operando_:a1									{: RESULT = a1;																					:}
-							|	LPAREN 		expr_:a1 	RPAREN					{: RESULT = a1;					System.out.println(a1 );										:}
+expr_					::= 
+							|	operando_:a1											{: RESULT = a1;																					:}
+							|	LPAREN 		expr_:a1 	RPAREN							{: RESULT = a1;					/*System.out.println(a1 );	*/									:}
+							
 									
 							
 
 							;
 							
-operando				::= 	ENTERO:n	    								{: RESULT = n;  		/*System.out.println("Detecto entero: " + n);		*/					:}
-							|	REAL:n											{: RESULT = n;			/*System.out.println("Detecto real: " + RESULT); 	*/							:}
+operando				::= 	ENTERO:n	    										{: RESULT = n;  		/*System.out.println("Detecto entero: " + n);	*/						:}
+							|	REAL:n													{: RESULT = n;			/*System.out.println("Detecto real: " + RESULT); 	*/					:}
+							
 
 						;
 						
-operando_				::= 	CARACTER:c1										{: RESULT = c1;			/*System.out.println("caracter: " + RESULT); 	*/							:}
-							|	BOOLEAN:b1										{: RESULT = b1;			/*System.out.println("booleano: " + RESULT); 	*/							:}
+operando_				::= 	CARACTER:c1												{: RESULT = c1;			/*System.out.println("caracter: " + RESULT); 	*/						:}
+							|	BOOLEAN:b1												{: RESULT = b1;			/*System.out.println("booleano: " + RESULT); 	*/						:}
+									
 
+						;
+						
+identifier_val			::=		IDENT:name									{:RESULT=resgitroTable.get( name );:}	/*{: if (isInteger(resgitroTable.get(name)) | isDouble(resgitroTable.get(name))){
+																								Double value = ( Double ) resgitroTable.get( name );
+																								if ( value == null ) {
+																									parser.report_error( "Undeclared Identifier " + name, new Symbol( sym.IDENT, name ) );
+																									value = new Double( 0.0 );
+									
+																								}
+																								
+																						
+																								
+																							}
+																							else if (isBoolean(resgitroTable.get(name)) | isLetter(resgitroTable.get(name))){
+																								String value = ( String ) resgitroTable.get( name );
+																									if ( value == null ) {
+																										parser.report_error( "Undeclared Identifier " + name, new Symbol( sym.IDENT, name ) );
+																										value = new String(" ");
+									
+																									}
+																								
+											
+																							RESULT = value;		:}*/
 						;
 
 
@@ -243,4 +385,17 @@ bucle					::=		WHILE
 								inner_block ENDWHILE
 								{:  :}
 							;	
+							
+							
+inner_block				::=		inner_block inner_sentence
+
+							|	inner_sentence
+							;
+						
+inner_sentence			::=		sent_decl 	
+
+							|	sent_uso  		
+								
+							|	sent_flujo			
+							;
 							
