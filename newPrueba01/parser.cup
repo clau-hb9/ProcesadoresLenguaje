@@ -1,0 +1,254 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import cup.example.tables.*;
+
+parser code {:
+  	protected Lexer lexer;
+	protected TablaSimbolos tabla = new TablaSimbolos();
+:}
+
+action code {:
+	private char tipo(Object o){
+		if (o == null) return 'i';
+		else if (o instanceof Double) return 'e';
+		else return 'c';
+	}
+:}
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+  lexer = new Lexer(f,fis, tabla);
+:};
+scan with {: return lexer.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal            SEMI, PLUS, MINUS, DIVISION, UMINUS, TIMES, LPAREN, RPAREN,
+					MENORQUE, MAYORQUE, IGUALQUE, ASIGNACION, AND, OR, NOT, VECTOR, COMA;
+terminal Double    	ENTERO;        // our scanner provides numbers as integers
+terminal Simbolo	IDENT;
+terminal String		VARTYPE;
+
+/* Non terminals */
+non terminal            ejecucion, bloque_sentencias, sentencia, sent_flujo, sent_uso, sent_decl, expr_list,
+						decl_variable, multiple_declaration, multiple_declaration_;
+non terminal Object    expr;      // used to store evaluated subexpressions
+
+
+
+/* Precedences */
+precedence nonassoc 				LPAREN;
+precedence left 					OR;
+precedence left 					AND;
+precedence nonassoc	MENORQUE, MAYORQUE, IGUALQUE;
+precedence left 	PLUS, MINUS;
+precedence left 	TIMES, DIVISION;
+precedence left 	UMINUS;
+
+/* The grammar rules */
+ejecucion				::= 	bloque_sentencias:b1
+								{: System.out.println(b1);				:}
+							
+						;
+						
+bloque_sentencias		::= 	sentencia:s1	
+								{: RESULT=  s1 ; 							:}
+								
+							|	bloque_sentencias:b1 sentencia:s1
+								{: RESULT= b1 + "\n" + s1; 					:}
+							;
+							
+sentencia				::=		sent_decl:s1
+								{: RESULT=  s1; 						:}		
+
+
+
+							|	sent_uso:s1  	
+								{: RESULT=  s1;  						:}
+								
+							|	sent_flujo:s1	
+								{: RESULT=  s1; 						:}
+							;
+
+
+
+//DECLARACION
+
+sent_decl				::=		decl_variable:d1 		SEMI
+								{: RESULT=  d1 + ";"; 	:}	
+
+							| 	multiple_declaration:d1 SEMI
+								{: RESULT=  d1 + ";"; 	:}
+							;
+
+multiple_declaration	::=		 decl_variable:d1  multiple_declaration_:m1
+								{: RESULT= d1 +" "+ m1 ;  														:}
+								
+							;
+							
+multiple_declaration_ 	::=		COMA IDENT:i1 multiple_declaration_:m1
+								{: RESULT = ", " +  i1.nombre  +" "+ m1; 												:}
+								
+							|	COMA IDENT:i1
+								{: RESULT = ", " + i1.nombre;  														:}
+							
+							;
+
+decl_variable 			::=		VARTYPE:t1 IDENT:i1 ASIGNACION expr:e1
+								{: 	RESULT= "INICIALIZO " + i1.nombre + " := " + e1 ;
+									i1.valor = e1;
+									System.out.println(i1.valor);
+								:}
+								
+							|	VARTYPE:t1 IDENT:i1 
+								{: RESULT= "INICIALIZO " + i1.nombre  ;
+									
+
+								:}
+							/*|	VECTOR VARTYPE:t1 IDENT:i1 dimension:d1
+								{: RESULT = "VECTOR " + t1 + " " + i1 + d1;  									
+							:}*/
+							;
+
+//USO
+sent_uso 				::= 	expr:e SEMI    
+								{: RESULT=  e + ";"; 								:}               
+            			;
+            
+expr      				::= 	IDENT:s1 	//expr:e1				
+								{: 	//RESULT = e1;
+									RESULT = s1.valor;	
+									if ( tipo(s1.valor) == 'i'){
+										System.err.println("ERROR. Se debe inicializar la variable: " + s1.nombre);
+									}
+									System.out.println(s1.valor);	
+								:}
+								
+						|		ENTERO:e1							
+								{: 	RESULT = e1 ;	
+									System.out.println(e1);						
+								:}
+								
+						| 		expr:e1 PLUS expr:e2				
+								{: 	
+									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
+										RESULT =   ((Double)e1).doubleValue() + ((Double)e2).doubleValue(); 
+										System.out.println("soy" +RESULT);	
+									}
+								:}
+								
+								
+            			| 		expr:e1 MINUS expr:e2				
+            					{: 	
+									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
+										RESULT =   ((Double)e1).doubleValue() - ((Double)e2).doubleValue(); 
+										System.out.println(RESULT);	
+									}	
+								:}
+								
+            			| 		expr:e1 TIMES expr:e2				
+            					{: 	
+									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
+										RESULT =   ((Double)e1).doubleValue() * ((Double)e2).doubleValue(); 
+										System.out.println(RESULT);	
+									}
+								:}
+								
+						| 		expr:e1 DIVISION expr:e2				
+            					{: 	
+									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
+										RESULT =   ((Double)e1).doubleValue() / ((Double)e2).doubleValue(); 
+										System.out.println(RESULT);	
+									}
+								:}
+					
+						| 		LPAREN expr:e1 RPAREN				
+            					{: 	System.out.println(e1);
+									if( (tipo(e1) == 'e')  ){
+										RESULT =   ((Double)e1).doubleValue() ; 
+										System.out.println(RESULT);	
+									}
+								:}
+								
+						| 		expr:e1 MENORQUE expr:e2				
+            					{: 	
+									if( ((Double)e1).doubleValue() < ((Double)e2).doubleValue() ){
+
+										RESULT =   true; 
+										System.out.println(RESULT);
+									}	
+									else {
+										RESULT =   false;
+									}
+								:}
+						
+						| 		expr:e1 MAYORQUE expr:e2				
+            					{: 	
+									if( ((Double)e1).doubleValue() > ((Double)e2).doubleValue() ){
+
+										RESULT =   true; 
+										System.out.println(RESULT);
+									}	
+									else {
+										RESULT =   false;
+									}
+								:}
+								
+						| 		expr:e1 IGUALQUE expr:e2				
+            					{: 	
+									if( ((Double)e1).doubleValue() == ((Double)e2).doubleValue() ){
+
+										RESULT =   true; 
+										System.out.println(RESULT);
+									}	
+									else {
+										RESULT =   false;
+									}
+								:}
+								
+						| 		expr:e1 AND expr:e2				
+            					{: 	
+									if( String.valueOf(e1) == "true" && String.valueOf(e2) == "true" ){
+
+										RESULT =   true; 
+										System.out.println("CONDICIÓN: "+ RESULT);
+									}	
+									else {
+										RESULT =   false;
+										System.out.println("CONDICIÓN: "+ RESULT);
+									}
+								:}
+								
+						| 		expr:e1 OR expr:e2				
+            					{: 	
+									if( String.valueOf(e1) == "true" || String.valueOf(e2) == "true" ){
+
+										RESULT =   true; 
+										System.out.println("CONDICIÓN: "+ RESULT);
+									}	
+									else {
+										RESULT =   false;
+										System.out.println("CONDICIÓN: "+ RESULT);
+									}
+								:}
+
+             			;
+       
