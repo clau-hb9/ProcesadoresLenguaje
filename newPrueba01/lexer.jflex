@@ -5,6 +5,7 @@ import java_cup.runtime.Symbol;
 import java.lang.*;
 import java.io.InputStreamReader;
 import cup.example.tables.*;
+import java.io.BufferedReader;
 
 %%
 
@@ -19,15 +20,28 @@ import cup.example.tables.*;
 %{
 	
 	private TablaSimbolos tabla;
-    public Lexer(ComplexSymbolFactory sf, java.io.InputStream is, TablaSimbolos t){
+	private TablaVectores tablaVectores;
+	private Object entrada;
+	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	
+
+ 	private static int actualEtq=0;
+ 	private static String nuevaEtq() {
+ 		return "etqL"+(++actualEtq);
+ 	}
+
+    public Lexer(ComplexSymbolFactory sf, java.io.InputStream is, TablaSimbolos t, TablaVectores t1){
 		this(is);
         symbolFactory = sf;
         this.tabla = t;
+        this.tablaVectores = t1;
     }
-	public Lexer(ComplexSymbolFactory sf, java.io.Reader reader, TablaSimbolos t){
+	public Lexer(ComplexSymbolFactory sf, java.io.Reader reader, TablaSimbolos t, TablaVectores t1){
 		this(reader);
         symbolFactory = sf;
         this.tabla = t;
+        this.tablaVectores = t1;
+        
     }
     
     private StringBuffer sb;
@@ -61,10 +75,16 @@ Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
 
 
+
+/* Entrada */
 Entero		= [0-9] | [1-9][0-9]+
 Hex         = ("0X"|"0x") [0-9|A-F|a-f]+ 
 Real 		= [0-9]+ "." ([0-9]+)?
 Cientifica	= [1-9] ("." [0-9]+)? ((E|e)("+"|"-")? [0-9]+)
+Caracter    = "'" .? "'"
+ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
+
+
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -72,9 +92,12 @@ TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 
-ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 
+
+
+
+/* Palabras reservadas */
 %caseless Vector    	= "vector"
 %caseless EnteroVar 	= "entero"
 %caseless RealVar   	= "real"
@@ -85,6 +108,23 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 %caseless Or        	= "or"
 %caseless Not       	= "not"
 
+%caseless True      	= "true"
+%caseless False     	= "falso"
+
+%caseless While     	= "mientras"
+%caseless EndWhile  	= "finmientras"
+%caseless If        	= "si"
+%caseless EndIf     	= "finsi"
+%caseless Else      	= "sino"
+%caseless Then      	= "entonces"
+
+%caseless Entrada      	= "entrada"
+
+
+
+
+
+
 %eofval{
     return symbolFactory.newSymbol("EOF",sym.EOF);
 %eofval}
@@ -92,6 +132,9 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 %state CODESEG
 
 %%  
+
+<YYINITIAL> {True}        	{ return symbolFactory.newSymbol("BOOLEAN",   	BOOLEAN, 	  	Boolean.parseBoolean(yytext())); 				}
+<YYINITIAL> {False}       	{ return symbolFactory.newSymbol("BOOLEAN",   	BOOLEAN, 	  	Boolean.parseBoolean(yytext()));				}
 
 /* Tipo Variables */
 <YYINITIAL> {Vector}      	{ return symbolFactory.newSymbol("VECTOR", 	  	VECTOR); 															}
@@ -105,10 +148,22 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 <YYINITIAL> {Or}          	{ return symbolFactory.newSymbol("OR", 	      	OR); 														    }
 <YYINITIAL> {Not}         	{ return symbolFactory.newSymbol("NOT", 	    NOT); 															}	
 
+/* Estructuras de control */
+<YYINITIAL> {While}       	{ return symbolFactory.newSymbol("WHILE", 	  	WHILE, nuevaEtq()); 														}
+<YYINITIAL> {EndWhile}   	{ return symbolFactory.newSymbol("ENDWHILE",  	ENDWHILE); 														}
+<YYINITIAL> {EndIf}      	{ return symbolFactory.newSymbol("ENDIF", 	  	ENDIF); 														}
+<YYINITIAL> {If}          	{ return symbolFactory.newSymbol("IF", 	      	IF, nuevaEtq() ); 														    }
+<YYINITIAL> {Else}        	{ return symbolFactory.newSymbol("ELSE", 	    ELSE); 														    }
+<YYINITIAL> {Then}        	{ return symbolFactory.newSymbol("THEN", 	    THEN); 															}
+
+<YYINITIAL> {Entrada}       { entrada =  reader.readLine(); System.out.println(entrada);return symbolFactory.newSymbol("ENTRADA", 	    ENTRADA, entrada ); 															}
+
 
 <YYINITIAL> {
 
   {Whitespace} {                              }
+  /* Comentarios */
+  	{Comment} 					{                              }
   ";"          				{ return symbolFactory.newSymbol("SEMI", 		SEMI); 															}
   ","          			    { return symbolFactory.newSymbol("COMA", 	  	COMA); 															}
   
@@ -120,19 +175,31 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   ":="         				{ return symbolFactory.newSymbol("ASIGNACION", 	ASIGNACION);													}
   
   
-  "("          				{ return symbolFactory.newSymbol("LPAREN", LPAREN); }
-  ")"          				{ return symbolFactory.newSymbol("RPAREN", RPAREN); }
+  "("          				{ return symbolFactory.newSymbol("LPAREN", LPAREN); 															}
+  ")"          				{ return symbolFactory.newSymbol("RPAREN", RPAREN); 															}
+  "["          			    { return symbolFactory.newSymbol("LBRACKET",  	LBRACKET); 													    }
+  "]"          			    { return symbolFactory.newSymbol("RBRACKET",  	RBRACKET); 													    }
   
+  /* Comparaci�n */
   "<"          		  	    { return symbolFactory.newSymbol("MENORQUE", 	MENORQUE); 														}														  
   ">"          			    { return symbolFactory.newSymbol("MAYORQUE", 	MAYORQUE); 														}
   "=="         			    { return symbolFactory.newSymbol("IGUALQUE", 	IGUALQUE);														}
   
   
   
-  {Entero}     		    	{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  		Double.parseDouble(yytext()));					}
-  {Hex}			    		{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  		Long.decode(yytext()).doubleValue());			}
-  {Real}      				{ return symbolFactory.newSymbol("ENTERO", 	    ENTERO, 	    	Double.parseDouble(yytext())); 					}
-  {Cientifica}	  			{ return symbolFactory.newSymbol("ENTERO",  	ENTERO, 			Double.parseDouble(yytext())); 					}
+    /* L�gico */
+  "&"						{ return symbolFactory.newSymbol("AND", 	    AND);															}
+  "|"						{ return symbolFactory.newSymbol("OR", 	        OR);															}
+  "!"						{ return symbolFactory.newSymbol("NOT", 	    NOT);															}
+  
+  
+  
+  {Entero}     		    	{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  		Integer.parseInt(yytext()));					}
+  {Hex}			    		{ return symbolFactory.newSymbol("ENTERO",   	ENTERO, 	  		Long.decode(yytext()).intValue());			}
+  {Real}      				{ return symbolFactory.newSymbol("REAL", 	    REAL, 	    		Double.parseDouble(yytext())); 					}
+  {Cientifica}	  			{ return symbolFactory.newSymbol("REAL",  		REAL, 				Double.parseDouble(yytext())); 					}
+  {Caracter}	            { return symbolFactory.newSymbol("CARACTER", 	CARACTER, 			yytext().charAt(1)); 					        }
+  
   
   
   

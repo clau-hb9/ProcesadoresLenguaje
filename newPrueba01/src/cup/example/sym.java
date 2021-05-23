@@ -10,16 +10,26 @@ public interface sym {
   /* terminals */
   public static final int TIMES = 7;
   public static final int AND = 14;
-  public static final int IDENT = 20;
+  public static final int IDENT = 32;
+  public static final int ELSE = 26;
   public static final int PLUS = 3;
   public static final int OR = 15;
   public static final int RPAREN = 9;
+  public static final int ENDIF = 23;
+  public static final int THEN = 22;
+  public static final int WHILE = 24;
   public static final int SEMI = 2;
   public static final int DIVISION = 5;
+  public static final int ENDWHILE = 25;
   public static final int NOT = 16;
   public static final int MAYORQUE = 11;
+  public static final int IF = 21;
+  public static final int LBRACKET = 19;
   public static final int LPAREN = 8;
   public static final int IGUALQUE = 12;
+  public static final int RBRACKET = 20;
+  public static final int CARACTER = 30;
+  public static final int BOOLEAN = 29;
   public static final int COMA = 18;
   public static final int ASIGNACION = 13;
   public static final int EOF = 0;
@@ -27,8 +37,10 @@ public interface sym {
   public static final int MENORQUE = 10;
   public static final int MINUS = 4;
   public static final int error = 1;
-  public static final int VARTYPE = 21;
-  public static final int ENTERO = 19;
+  public static final int ENTRADA = 31;
+  public static final int VARTYPE = 33;
+  public static final int ENTERO = 27;
+  public static final int REAL = 28;
   public static final int UMINUS = 6;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -50,7 +62,19 @@ public interface sym {
   "NOT",
   "VECTOR",
   "COMA",
+  "LBRACKET",
+  "RBRACKET",
+  "IF",
+  "THEN",
+  "ENDIF",
+  "WHILE",
+  "ENDWHILE",
+  "ELSE",
   "ENTERO",
+  "REAL",
+  "BOOLEAN",
+  "CARACTER",
+  "ENTRADA",
   "IDENT",
   "VARTYPE"
   };

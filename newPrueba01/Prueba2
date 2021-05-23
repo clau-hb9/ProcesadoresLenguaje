@@ -1,0 +1,29 @@
+REAL re1;
+ENTERO en2 := 6; 
+BOOLEANO bo3 := 5<3; 
+CARACTER ca4 := 'h'; 
+
+VECTOR REAL matriz_i [4];
+VECTOR CARACTER alumno [4];
+alumno[1]:='A';
+alumno[2]:='H';
+alumno[3]:='1';
+alumno[4]:='9';
+
+matriz_i[1] := 1.0; 
+matriz_i[2] := 0.0; 
+matriz_i[3] := 0.0; 
+matriz_i[4] := 1.0;
+
+BOOLEANO seguir := true;
+MIENTRAS seguir AND matriz_i[4]>0
+	SI matriz_i[1] < 0 AND matriz_i[4] <0 ENTONCES
+	seguir:= FALSO;
+	SINO 
+ 		seguir:= TRUE;
+	FINSI
+	
+	matriz_i[1]:= matriz_i[1]/2.0;
+	matriz_i[4]:= matriz_i[4] - 1.0;
+FINMIENTRAS
+

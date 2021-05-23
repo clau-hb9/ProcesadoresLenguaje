@@ -1,0 +1,30 @@
+REAL re1, re2;
+BOOLEANO bo;
+CARACTER ca := 'h';
+
+re1:=5 * 3 - 80/10;
+re2:=10 / 5 * re1;
+bo :=5<3;
+
+REAL num;
+BOOLEANO espos;
+SI num > 0 ENTONCES
+espos:=TRUE;
+SINO
+espos:=FALSO;
+FINSI
+
+ENTERO a,b,c,max;
+a:=1;
+b:=2; 
+c:=3; 
+
+SI a>b AND a>c ENTONCES 
+max:=a;
+ SINO 
+ SI b>a AND b>c ENTONCES 
+	max:=b;
+ SINO 
+	max:=c;
+ FINSI
+FINSI

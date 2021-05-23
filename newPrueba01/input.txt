@@ -1,1 +1,10 @@
-(2-1);
+/* Errores en operaciones */
+'a' + true;
+true + 2;
+true + 2.2;
+2 * 'c';
+'c'/4;
+true < 2;
+2 OR 2;
+2.0 AND 2;
+

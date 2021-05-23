@@ -12,17 +12,265 @@ import java.io.File;
 import java.io.FileInputStream;
 import cup.example.tables.*;
 
+
 parser code {:
   	protected Lexer lexer;
 	protected TablaSimbolos tabla = new TablaSimbolos();
+	protected TablaVectores tablaVectores = new TablaVectores();
+	protected String vartype = "";
+	protected boolean variableCte = true;
 :}
 
 action code {:
+
+	
+
+	
+
+	
+
 	private char tipo(Object o){
+		
 		if (o == null) return 'i';
-		else if (o instanceof Double) return 'e';
+		else if (o instanceof Integer) return 'e';
+		else if (o instanceof Double) return 'd';
+		else if (o instanceof Boolean) return 'b';
 		else return 'c';
 	}
+
+
+	private String extension(char c) {
+		if (c == 'e') return "entero";
+		else if (c == 'c') return "caracter";
+		else if (c == 'd') return "real";
+		else if (c == 'b') return "booleano";
+		else return "Indefinido";
+
+	}
+
+	private boolean comprobacionVarType (String vartype, Object expr){
+		char tipo = tipo(expr);
+		boolean result = false;
+		if ((tipo == 'e' || tipo == 'c') && vartype.toLowerCase().equals("entero") )			{ result = true; }
+		else if ((tipo == 'c' || tipo == 'd' || tipo == 'e') && vartype.toLowerCase().equals("real")  )		{ result = true; }
+		else if (tipo == 'b' && vartype.toLowerCase().equals("booleano"))	{ result = true; }
+		else if (tipo == 'c' && vartype.toLowerCase().equals("caracter"))	{ result = true; }
+		return result;
+	}
+
+	private void asignacionInicial(String vartype, Simbolo ident) {
+		if (vartype.toLowerCase().equals("entero") )						{ ident.valor = 0; }
+		else if (vartype.toLowerCase().equals("real") )						{ ident.valor = 0.0; }
+		else if (vartype.toLowerCase().equals("booleano") )					{ ident.valor = false; }
+		else if (vartype.toLowerCase().equals("caracter") )					{ ident.valor = '0'; }
+		else if (vartype.toLowerCase().equals("vector") )					{ ident.valor = "VECTOR"; }
+
+	}
+
+	private Object asignacionInicialVector(String vartype) {
+		if (vartype.toLowerCase().equals("entero") )						{ return  0; }
+		else if (vartype.toLowerCase().equals("real") )						{ return  0.0; }
+		else if (vartype.toLowerCase().equals("booleano") )					{ return  false; }
+		else if (vartype.toLowerCase().equals("caracter") )					{ return  '0'; }
+		else return null;
+
+	}
+
+
+	private Object sumar (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+
+		if (tipoA == 'c') {
+			char aChar = (char) a;
+			int a_ = aChar;
+			
+			if (tipoB == 'c') 		{ char bChar = (char) b; int b_ = bChar; return a_ + b_;					}
+			else if (tipoB == 'e') 	{ return a_ + ((Integer)b).intValue();		}
+			else if (tipoB == 'd') 	{ return a_ + ((Double)b).doubleValue();		}
+		}	
+		
+		else if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ return ((Integer)a).intValue() + ((Integer)b).intValue(); 	}
+			else if (tipoB == 'd') 	{ return ((Integer)a).intValue() + ((Double)b).doubleValue();	}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; return  b_ + ((Integer)a).intValue();				}
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ return ((Double)a).doubleValue() + ((Double)b).doubleValue(); }
+			else if (tipoB == 'e')	{ return ((Double)a).doubleValue() + ((Integer)b).intValue();	}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; return ((Double)a).doubleValue() + b_;				}
+		}
+	return null;
+	}	
+
+
+	private Object restar (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+
+		if (tipoA == 'c') {
+			char aChar = (char) a;
+			int a_ = aChar;
+			
+			if (tipoB == 'c') 		{ char bChar = (char) b; int b_ = bChar; return a_ - b_;					}
+			else if (tipoB == 'e') 	{ return a_ - ((Integer)b).intValue();		}
+			else if (tipoB == 'd') 	{ return a_ - ((Double)b).doubleValue();		}
+		}	
+		
+		else if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ return ((Integer)a).intValue() - ((Integer)b).intValue(); 	}
+			else if (tipoB == 'd') 	{ return ((Integer)a).intValue() - ((Double)b).doubleValue();	}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; return  b_ - ((Integer)a).intValue();				}
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ return ((Double)a).doubleValue() - ((Double)b).doubleValue(); }
+			else if (tipoB == 'e')	{ return ((Double)a).doubleValue() - ((Integer)b).intValue();	}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; return ((Double)a).doubleValue() - b_;				}
+		}
+	return null;
+	}
+
+	private Object multiplicar (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+		if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ return ((Integer)a).intValue() * ((Integer)b).intValue(); 	}
+			else if (tipoB == 'd') 	{ return ((Integer)a).intValue() * ((Double)b).doubleValue();	}
+			
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ return ((Double)a).doubleValue() * ((Double)b).doubleValue(); }
+			else if (tipoB == 'e')	{ return ((Double)a).doubleValue() * ((Integer)b).intValue();	}
+		}
+	return null;
+	}
+
+	private Object division (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+		if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ System.out.println(((Integer)a).intValue() % ((Integer)b).intValue());if( ((Integer)a).intValue() % ((Integer)b).intValue() == 0){ return ((Integer)a).intValue() / ((Integer)b).intValue(); } else{System.out.println(new Double( ((Integer)a).intValue()/((Integer)b).intValue()));return new Double( ((Integer)a).doubleValue()/((Integer)b).doubleValue());}	}
+			else if (tipoB == 'd') 	{ return ((Integer)a).intValue() / ((Double)b).doubleValue();	}
+			
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ return ((Double)a).doubleValue() / ((Double)b).doubleValue(); }
+			else if (tipoB == 'e')	{ return ((Double)a).doubleValue() / ((Integer)b).intValue();	}
+		}
+	return null;
+	}
+
+	private Object menorQue (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+		if (tipoA == 'c') {
+			char aChar = (char) a;
+			int a_ = aChar;
+			
+			if (tipoB == 'c') 		{ char bChar = (char) b; int b_ = bChar; if (a_ < b_) 	{ return true; } else { return false ;}					}
+			else if (tipoB == 'e') 	{ if (a_ < ((Integer)b).intValue()) 					{ return true; } else { return false ;}					}
+			else if (tipoB == 'd') 	{ if (a_ < ((Double)b).doubleValue())					{ return true; } else { return false ;}					}
+		}	
+		
+		else if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ if( ((Integer)a).intValue() < ((Integer)b).intValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'd') 	{ if( ((Integer)a).intValue() < ((Double)b).doubleValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; if( b_ < ((Integer)a).intValue())				{ return true; } else { return false ;}					}
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ if( ((Double)a).doubleValue() < ((Double)b).doubleValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'e')	{ if( ((Double)a).doubleValue() < ((Integer)b).intValue())									{ return true; } else { return false ;}					}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; if( ((Double)a).doubleValue() < b_)				{ return true; } else { return false ;}					}
+		}
+	return null;
+	}
+
+	private Object mayorQue (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+		if (tipoA == 'c') {
+			char aChar = (char) a;
+			int a_ = aChar;
+			
+			if (tipoB == 'c') 		{ char bChar = (char) b; int b_ = bChar; if (a_ > b_) 	{ return true; } else { return false ;}					}
+			else if (tipoB == 'e') 	{ if (a_ > ((Integer)b).intValue()) 					{ return true; } else { return false ;}					}
+			else if (tipoB == 'd') 	{ if (a_ > ((Double)b).doubleValue())					{ return true; } else { return false ;}					}
+		}	
+		
+		else if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ if( ((Integer)a).intValue() > ((Integer)b).intValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'd') 	{ if( ((Integer)a).intValue() > ((Double)b).doubleValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; if( b_ > ((Integer)a).intValue())				{ return true; } else { return false ;}					}
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ if( ((Double)a).doubleValue() > ((Double)b).doubleValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'e')	{ if( ((Double)a).doubleValue() > ((Integer)b).intValue())									{ return true; } else { return false ;}					}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; if( ((Double)a).doubleValue() > b_)				{ return true; } else { return false ;}					}
+		}
+	return null;
+	}
+
+
+	private Object igualQue (Object a, Object b){
+		char tipoA = tipo(a); 
+		char tipoB = tipo(b);	
+		
+		
+		if (tipoA == 'c') {
+			char aChar = (char) a;
+			int a_ = aChar;
+			
+			if (tipoB == 'c') 		{ char bChar = (char) b; int b_ = bChar; if (a_ == b_) 	{ return true; } else { return false ;}					}
+			else if (tipoB == 'e') 	{ if (a_ == ((Integer)b).intValue()) 					{ return true; } else { return false ;}					}
+			else if (tipoB == 'd') 	{ if (a_ == ((Double)b).doubleValue())					{ return true; } else { return false ;}					}
+		}	
+		
+		else if (tipoA == 'e') {
+			
+			if (tipoB == 'e') 		{ if( ((Integer)a).intValue() == ((Integer)b).intValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'd') 	{ if( ((Integer)a).intValue() == ((Double)b).doubleValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; if( b_ == ((Integer)a).intValue())				{ return true; } else { return false ;}					}
+		}
+
+		else if (tipoA == 'd') {
+			if ( tipoB == 'd' ) 	{ if( ((Double)a).doubleValue() == ((Double)b).doubleValue())								{ return true; } else { return false ;}					}
+			else if (tipoB == 'e')	{ if( ((Double)a).doubleValue() == ((Integer)b).intValue())									{ return true; } else { return false ;}					}
+			else if (tipoB == 'c')	{ char bChar = (char) b; int b_ = bChar; if( ((Double)a).doubleValue() == b_)				{ return true; } else { return false ;}					}
+		}
+
+		else if (tipoA == 'b') {
+			if ( tipoB == 'b' ) 	{ if( a == b )																				{ return true; } else { return false ;}					}
+			
+		}
+	return null;
+	}
+
+
+
 :}
 
 /* define how to connect to the scanner! */
@@ -36,21 +284,33 @@ init with {:
   } catch (IOException e) {
     e.printStackTrace();
   } 
-  lexer = new Lexer(f,fis, tabla);
+  lexer = new Lexer(f,fis, tabla, tablaVectores);
 :};
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
 terminal            SEMI, PLUS, MINUS, DIVISION, UMINUS, TIMES, LPAREN, RPAREN,
-					MENORQUE, MAYORQUE, IGUALQUE, ASIGNACION, AND, OR, NOT, VECTOR, COMA;
-terminal Double    	ENTERO;        // our scanner provides numbers as integers
+					MENORQUE, MAYORQUE, IGUALQUE, ASIGNACION, AND, OR, NOT, VECTOR, COMA,
+					LBRACKET, RBRACKET, IF, THEN, ENDIF, WHILE, ENDWHILE, ELSE;
+					
+					
+terminal Integer    ENTERO;  
+terminal Double 	REAL;         
+terminal Boolean 	BOOLEAN;
+terminal Character	CARACTER;
+terminal Object 	ENTRADA;
+
 terminal Simbolo	IDENT;
 terminal String		VARTYPE;
 
+
 /* Non terminals */
 non terminal            ejecucion, bloque_sentencias, sentencia, sent_flujo, sent_uso, sent_decl, expr_list,
-						decl_variable, multiple_declaration, multiple_declaration_;
+						decl_variable, multiple_declaration, multiple_declaration_, condicional, bucle, inner_block,
+						else_condicional, inner_sentence;
 non terminal Object    expr;      // used to store evaluated subexpressions
+non terminal Integer	dimension, sign;
+
 
 
 
@@ -65,7 +325,7 @@ precedence left 	UMINUS;
 
 /* The grammar rules */
 ejecucion				::= 	bloque_sentencias:b1
-								{: System.out.println(b1);				:}
+								{: System.out.println(b1); System.out.println("\nImprimo tabla simbolos: "); tabla.imprimir(); System.out.println("\nImprimo tabla vectores: "); tablaVectores.imprimir();		:}
 							
 						;
 						
@@ -105,27 +365,162 @@ multiple_declaration	::=		 decl_variable:d1  multiple_declaration_:m1
 							;
 							
 multiple_declaration_ 	::=		COMA IDENT:i1 multiple_declaration_:m1
-								{: RESULT = ", " +  i1.nombre  +" "+ m1; 												:}
+								{: 
+									if ( i1.valor == null){	
+										RESULT = ", " +  i1.nombre  +" "+ m1;
+										asignacionInicial (vartype, i1);
+									}	
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " ya declarada. ");
+									}
+
+
+
+ 								:}
 								
 							|	COMA IDENT:i1
-								{: RESULT = ", " + i1.nombre;  														:}
+								{: 
+									if ( i1.valor == null){	
+										RESULT = ", " +  i1.nombre ;
+										asignacionInicial (vartype, i1);
+
+									}	
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " ya declarada. ");
+									}
+
+								:}
 							
 							;
 
 decl_variable 			::=		VARTYPE:t1 IDENT:i1 ASIGNACION expr:e1
-								{: 	RESULT= "INICIALIZO " + i1.nombre + " := " + e1 ;
-									i1.valor = e1;
-									System.out.println(i1.valor);
+								{: 	if ( i1.valor == null){
+							
+										if (comprobacionVarType (t1, e1)){
+											if ( tipo(e1) == 'c' && t1.toLowerCase().equals("entero")) { char e1Char = (char) e1; int e1_ = e1Char; RESULT = "INICIALIZO " + t1 + " " + i1.nombre + " := " + e1_; i1.valor = e1_;}
+											else if ( tipo(e1) == 'e' && t1.toLowerCase().equals("real"))	{ int e1Int = (int) e1; double e1_ = e1Int; RESULT = "INICIALIZO " + t1 + " " + i1.nombre + " := " + e1_;	i1.valor = 	e1_	;}
+											else{
+												RESULT= "INICIALIZO " + t1 + " " + i1.nombre + " := " + e1 ;
+												i1.valor = e1;
+											}
+											if (variableCte == false) { i1.cte = false;}
+										}
+										else {
+											System.err.println("ERROR. Asignación "+i1.nombre+ " no compatible con tipo de variable "+t1);
+										}
+									}
+									else{
+										System.err.println("ERROR. Variable "+ i1.nombre +" ya declarada. ");
+									}
+									
 								:}
 								
 							|	VARTYPE:t1 IDENT:i1 
-								{: RESULT= "INICIALIZO " + i1.nombre  ;
-									
+								{: 	vartype = t1;
+									if ( i1.valor == null){	
+										RESULT= "INICIALIZO "+t1+ " " + i1.nombre  ;
+										asignacionInicial (t1, i1);
+										
+									}	
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " ya declarada. ");
+									}
 
 								:}
-							/*|	VECTOR VARTYPE:t1 IDENT:i1 dimension:d1
-								{: RESULT = "VECTOR " + t1 + " " + i1 + d1;  									
-							:}*/
+								
+							|	IDENT:i1 ASIGNACION expr:e1
+								{: Simbolo s = tabla.buscar(i1.nombre);
+									if ( s != null){
+										String t1 = extension(tipo(e1));
+										String t2 = extension(tipo(s.valor));
+										if (comprobacionVarType (t2, e1)){
+											if ( tipo(e1) == 'c' && t2.toLowerCase().equals("entero")) { char e1Char = (char) e1; int e1_ = e1Char; RESULT = "ASIGNO " + t2 + " " + i1.nombre + " := " + e1_; i1.valor = e1_;}
+											else if ( tipo(e1) == 'e' && t2.toLowerCase().equals("real"))	{ int e1Int = (int) e1; double e1_ = e1Int; RESULT = "ASIGNO " + t2 + " " + i1.nombre + " := " + e1_;	i1.valor = 	e1_	;}
+											else if ( tipo(e1) == 'c' && t2.toLowerCase().equals("real"))	{ char e1Char = (char) e1; int e1_ = e1Char; RESULT = "ASIGNO " + t2 + " " + i1.nombre + " := " + e1_;	i1.valor = 	e1_	;}
+
+											else{
+	
+												RESULT="ASIGNO "+ t2 + " " + i1.nombre + " := " + e1 ;
+												i1.valor = e1;
+											}
+											if (variableCte == false) { i1.cte = false;}
+										}
+										else {
+											System.err.println("ERROR. Asignación "+i1.nombre+" con tipo "+t2+ " no compatible con tipo de variable "+t1);
+										}
+										
+									}	
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " no declarada. ");
+									}
+
+								:}
+								
+							|	IDENT:i1 dimension:d1 ASIGNACION expr:e1
+								{: Object s = (tablaVectores.buscar(i1.nombre)).getObject(d1);
+
+									if ( s != null){	
+										String t1 = extension(tipo(e1));
+										String t2 = extension(tipo(s));
+										if (comprobacionVarType (t2, e1)){
+											if ( tipo(e1) == 'c' && t2.toLowerCase().equals("entero")) { char e1Char = (char) e1; int e1_ = e1Char; RESULT = "ASIGNO " + t2 + " " + i1.nombre + " := " + e1_; (tablaVectores.buscar(i1.nombre)).setValue(e1, d1);;}
+											else if ( tipo(e1) == 'e' && t2.toLowerCase().equals("real"))	{ int e1Int = (int) e1; double e1_ = e1Int; RESULT = "ASIGNO " + t2 + " " + i1.nombre + " := " + e1_;	(tablaVectores.buscar(i1.nombre)).setValue(e1, d1);;}
+											else{
+	
+												RESULT= "ASIGNO " + t2 + " " + i1.nombre + "["+d1+"] := " + e1 ;
+												(tablaVectores.buscar(i1.nombre)).setValue(e1, d1);
+										
+
+											}
+										}
+										else {
+											System.err.println("ERROR. Asignación no compatible con tipo de variable. ");
+										}
+										
+									}	
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " no declarada. ");
+									}
+
+								:}
+								
+								
+							|	VECTOR VARTYPE:t1 IDENT:i1 dimension:d1
+								{: 	
+									if ( i1.valor == null){
+										RESULT = "Inicializo VECTOR " + t1 + " " + i1.nombre +"["+ d1+"]"; 
+										Object valorInicial = asignacionInicialVector(t1) ;	
+										tablaVectores.insertar(i1.nombre, d1, valorInicial);
+										asignacionInicial ("vector", i1);
+									}	
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " ya declarada. ");
+									}
+													
+								:}
+								
+							|	VECTOR VARTYPE:t1 IDENT:i1 dimension:d1 dimension:d2
+								{: 	if ( i1.valor == null){
+										RESULT = "VECTOR " + t1 + " " + i1.nombre +" "+ d1+" " +d2;  	
+										Object valorInicial = asignacionInicialVector(t1) ;	
+										tablaVectores.insertar(i1.nombre, d1, d2, valorInicial);
+										asignacionInicial ("vector", i1);
+									}
+									else{
+										System.err.println("ERROR. Variable "+i1.nombre+ " ya declarada. ");
+									}
+
+								
+								:}
+							;
+							
+dimension				::=	/*	dimension:d1 	LBRACKET 	expr:e1 	RBRACKET 
+								{:	RESULT= d1 + "["+ e1.intValue() +"]";  										:}
+						
+							| */	LBRACKET 		expr:e1 	RBRACKET
+									
+								{: 	RESULT= ((Integer)e1).intValue();  											:}
+								
 							;
 
 //USO
@@ -133,122 +528,248 @@ sent_uso 				::= 	expr:e SEMI
 								{: RESULT=  e + ";"; 								:}               
             			;
             
-expr      				::= 	IDENT:s1 	//expr:e1				
-								{: 	//RESULT = e1;
-									RESULT = s1.valor;	
+expr      				::= 	IDENT:s1 					
+								{: 	
+									RESULT =  s1.valor;	
 									if ( tipo(s1.valor) == 'i'){
 										System.err.println("ERROR. Se debe inicializar la variable: " + s1.nombre);
 									}
-									System.out.println(s1.valor);	
+								:}
+								
+						|		IDENT:s1 dimension:d1		
+												
+								{: 	Vector a = tablaVectores.buscar(s1.nombre);
+									Object valor = a.getObject(d1);
+									RESULT =  valor;
+									
+									
+									
 								:}
 								
 						|		ENTERO:e1							
 								{: 	RESULT = e1 ;	
-									System.out.println(e1);						
+														
 								:}
 								
+						|		 REAL:e1							
+								{: 	RESULT =  e1 ;	
+														
+								:}
+								
+						|		BOOLEAN:b1							
+								{: 
+								RESULT = b1 ; 					
+								:}
+							
+						|		CARACTER:b1							
+								{: 
+								RESULT = b1 ;						
+								:}
+								
+						| 		MINUS expr:e            {: RESULT =-1 *((Integer)e).intValue();           :}    
+            					%prec UMINUS                
+            			
+								
+						/*|		ENTRADA:b1							
+								{: System.out.println(Double.parseDouble(b1.toString()));
+								RESULT = b1 ;						
+								:}*/
+								
 						| 		expr:e1 PLUS expr:e2				
-								{: 	
-									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
-										RESULT =   ((Double)e1).doubleValue() + ((Double)e2).doubleValue(); 
-										System.out.println("soy" +RESULT);	
+								{:
+									if (sumar (e1,e2) != null) {
+										RESULT =   sumar (e1, e2); 
+									}
+									else {
+										System.err.println("ERROR. Suma de tipos incompatibles.");
+										
 									}
 								:}
 								
+															
 								
             			| 		expr:e1 MINUS expr:e2				
             					{: 	
-									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
-										RESULT =   ((Double)e1).doubleValue() - ((Double)e2).doubleValue(); 
-										System.out.println(RESULT);	
+									if (restar (e1,e2) != null) {
+										RESULT =   restar (e1, e2); 
+									}
+									else {
+										System.err.println("ERROR. Resta de tipos incompatibles.");
+										
 									}	
 								:}
 								
             			| 		expr:e1 TIMES expr:e2				
             					{: 	
-									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
-										RESULT =   ((Double)e1).doubleValue() * ((Double)e2).doubleValue(); 
-										System.out.println(RESULT);	
+									if (multiplicar (e1,e2) != null) {
+										RESULT =   multiplicar (e1, e2); 
+									}
+									else {
+										System.err.println("ERROR. Multiplicación de tipos incompatibles.");
+										
 									}
 								:}
 								
 						| 		expr:e1 DIVISION expr:e2				
             					{: 	
-									if( (tipo(e1) == 'e') && (tipo(e2) == 'e') ){
-										RESULT =   ((Double)e1).doubleValue() / ((Double)e2).doubleValue(); 
-										System.out.println(RESULT);	
+									if (division (e1,e2) != null) {
+										RESULT =   division (e1, e2); 
+									}
+									else {
+										System.err.println("ERROR. Division de tipos incompatibles.");
+										
 									}
 								:}
 					
 						| 		LPAREN expr:e1 RPAREN				
-            					{: 	System.out.println(e1);
-									if( (tipo(e1) == 'e')  ){
-										RESULT =   ((Double)e1).doubleValue() ; 
-										System.out.println(RESULT);	
-									}
+            					{: 	RESULT = e1;
 								:}
-								
+						
+						
 						| 		expr:e1 MENORQUE expr:e2				
             					{: 	
-									if( ((Double)e1).doubleValue() < ((Double)e2).doubleValue() ){
-
-										RESULT =   true; 
-										System.out.println(RESULT);
-									}	
+									if (menorQue (e1,e2) != null) {
+										
+										RESULT =   menorQue (e1, e2); 
+									}
 									else {
-										RESULT =   false;
+										System.err.println("ERROR. MenorQue de tipos incompatibles.");
+										
 									}
 								:}
 						
 						| 		expr:e1 MAYORQUE expr:e2				
             					{: 	
-									if( ((Double)e1).doubleValue() > ((Double)e2).doubleValue() ){
-
-										RESULT =   true; 
-										System.out.println(RESULT);
-									}	
+									if (mayorQue (e1,e2) != null) {
+										
+										RESULT =   mayorQue (e1, e2); 
+									}
 									else {
-										RESULT =   false;
+										System.err.println("ERROR. mayorQue de tipos incompatibles.");
+										
 									}
 								:}
 								
 						| 		expr:e1 IGUALQUE expr:e2				
             					{: 	
-									if( ((Double)e1).doubleValue() == ((Double)e2).doubleValue() ){
-
-										RESULT =   true; 
-										System.out.println(RESULT);
-									}	
+									if (igualQue (e1,e2) != null) {
+										RESULT =   igualQue (e1, e2); 
+									}
 									else {
-										RESULT =   false;
+										System.err.println("ERROR. igualQue de tipos incompatibles.");
+										
 									}
 								:}
 								
-						| 		expr:e1 AND expr:e2				
-            					{: 	
+						| 		expr:e1 AND expr:e2	
+								{:
 									if( String.valueOf(e1) == "true" && String.valueOf(e2) == "true" ){
-
-										RESULT =   true; 
-										System.out.println("CONDICIÓN: "+ RESULT);
-									}	
-									else {
-										RESULT =   false;
-										System.out.println("CONDICIÓN: "+ RESULT);
+										RESULT = true;
 									}
+									else {
+										RESULT = false;
+									}
+									
+								
+								
 								:}
 								
-						| 		expr:e1 OR expr:e2				
+						| 		expr:e1 OR expr:e2			
             					{: 	
 									if( String.valueOf(e1) == "true" || String.valueOf(e2) == "true" ){
-
-										RESULT =   true; 
-										System.out.println("CONDICIÓN: "+ RESULT);
-									}	
-									else {
-										RESULT =   false;
-										System.out.println("CONDICIÓN: "+ RESULT);
+										RESULT = true;
 									}
+									else {
+										RESULT = false;
+									}
+									
 								:}
-
+								
+								
+						| 		NOT expr:e1 				
+            					{: 	
+									if( String.valueOf(e1) == "false"  ){
+										RESULT = true;
+									}
+									else {
+										RESULT = false;
+									}
+									
+								:}
+						
+						
              			;
+             			
+
+sign					::=		MINUS								
+								{: RESULT = -1; :}
+
+							| 	PLUS								
+								{: RESULT = 1; :}
+								
+							
+						;
+             			
+// FLUJO
+
+sent_flujo				::=		condicional:c {: variableCte = true; RESULT = c; :}
+							|	bucle:c {: variableCte = true; RESULT =c; :}  
+							;	
+							
+condicional				::=		IF {:variableCte = false;:}
+								expr:e THEN inner_block:i else_condicional
+								{: 
+									if ( (e instanceof Boolean) == true){
+									
+										RESULT = "Bucle condicional --> condicion = "+ e + " cambios temporales "+i;
+									
+										
+										
+									}
+									else {
+										System.err.println("ERROR. La condición del IF debe ser booleana.");
+
+									}
+								 :}
+
+							;
+
+
+else_condicional		::=		ELSE inner_block ENDIF
+								
+	
+							|	ENDIF
+								
+							;
+							
+bucle					::=		WHILE {:variableCte = false;:}
+								expr:e inner_block:i ENDWHILE
+								{: if ( (e instanceof Boolean) == true){
+										RESULT = "Bucle while --> condicion = "+ e + " cambios temporales " +i;
+									}
+									else {
+										System.err.println("ERROR. La condición del IF debe ser booleana.");
+
+									}
+							 :}
+
+								
+								
+							;	
+							
+							
+inner_block				::=		inner_block:e1 inner_sentence:e2 {:RESULT = e1 + " "+e2;:}
+
+							|	inner_sentence:e	{:RESULT = e;:} 	
+							
+							;
+						
+inner_sentence			::=		sent_decl:e	{:RESULT = e;:} 	
+
+							|	sent_uso:e	{:RESULT = e;:} 	
+									
+								
+							|	sent_flujo:e	{:RESULT = e;:} 	
+									
+							;
        

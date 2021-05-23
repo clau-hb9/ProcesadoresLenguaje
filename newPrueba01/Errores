@@ -1,0 +1,24 @@
+REAL re1;
+re1:=true;					//Tipo no compatible
+
+REAL re1;					// Variable ya declarada
+
+/*conversion de tipos*/
+entero a := 'c'; 			//Lo transforma en entero
+real b := a;				// Lo transforma en real
+real c := a + 202.2;		// Realiza operaciones con conversión
+real d := 'c' + 202.2;		// Transfroma el caracter y realiza la suma
+
+/*Operaciones con char*/
+b:= 'c' - 'd';	
+b:= 'c' + 2;
+b:= 'c' + 256.7;
+
+/*Declaracion multiple*/
+real a_,b_,c_;
+entero A_;					// Se diferencia en entre mayusculas y minusculas
+a_ := 2/3 ;
+a_ := 2/3.2 ;
+
+		
+
